@@ -1,0 +1,90 @@
+version: '3.8'
+
+include:
+  - ../backend/docker-compose-be-local.yml
+  #- ../frontend/docker-compose-fe-local.yml
+
+services:
+  db:
+    image: postgres/postgres:15.3-alpine
+    restart: always
+    env_file:
+      - environment/local.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/data:/var/lib/postgresql/data #persistenza dati
+      - ./database/init:/docker-entrypoint-initdb.d #script di inizializzazione
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - net
+
+  keycloak:
+    image: keycloak/keycloak:latest
+    restart: always
+    env_file:
+      - environment/local.env
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-keycloak}
+      # IMPOSTAZIONI DB
+      KC_DB: ${POSTGRES_DB:-postgres}
+      KC_DB_URL: ${KC_DB_URL:-jdbc:postgresql://db:5432/keycloak}
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak}
+      # METRICHE
+      KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED:-true}
+      KC_METRICS_ENABLED: ${KC_METRICS_ENABLED:-true}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/realm/data:/opt/keycloak/data/import
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - net
+    command:
+      - start-dev
+      - --import-realm
+
+  geoserver:
+    image: docker.osgeo.org/geoserver:2.28.0
+    restart: always
+    env_file:
+      - environment/local.env
+    environment:
+      GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER:-admin}
+      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD:-admin}
+      POSTGRES_JNDI_ENABLED: true
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USERNAME: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - ./geoserver/data_dir:/opt/geoserver_data/
+    ports:
+      - "8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
