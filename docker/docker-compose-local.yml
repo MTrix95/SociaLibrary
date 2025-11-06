@@ -10,9 +10,9 @@ services:
     env_file:
       - environment/local.env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -32,16 +32,16 @@ services:
     env_file:
       - environment/local.env
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-keycloak}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
       # IMPOSTAZIONI DB
-      KC_DB: ${POSTGRES_DB:-postgres}
-      KC_DB_URL: ${KC_DB_URL:-jdbc:postgresql://db:5432/keycloak}
-      KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
-      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak}
+      KC_DB: ${POSTGRES_DB}
+      KC_DB_URL: ${KC_DB_URL}
+      KC_DB_USERNAME: ${KC_DB_USERNAME}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
       # METRICHE
-      KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED:-true}
-      KC_METRICS_ENABLED: ${KC_METRICS_ENABLED:-true}
+      KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED}
+      KC_METRICS_ENABLED: ${KC_METRICS_ENABLED}
     ports:
       - "8080:8080"
     volumes:
@@ -66,14 +66,14 @@ services:
     env_file:
       - environment/local.env
     environment:
-      GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER:-admin}
-      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD:-admin}
+      GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER}
+      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD}
       POSTGRES_JNDI_ENABLED: true
-      POSTGRES_HOST: ${POSTGRES_HOST:-db}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
-      POSTGRES_USERNAME: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USERNAME: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./locale/geoserver/data_dir:/opt/geoserver_data/
     ports:

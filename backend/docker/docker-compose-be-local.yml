@@ -5,9 +5,9 @@ services:
     env_file:
       - environment/be-local.env
     environment:
-      GATEWAY_HOST_DB: ${GATEWAY_HOST_DB:-jdbc:postgresql://db:5432/library}
-      GATEWAY_USER_DB: ${GATEWAY_USER_DB:-library}
-      GATEWAY_PASSWORD_DB: ${GATEWAY_PASSWORD_DB:-library}
+      GATEWAY_HOST_DB: ${GATEWAY_HOST_DB}
+      GATEWAY_USER_DB: ${GATEWAY_USER_DB}
+      GATEWAY_PASSWORD_DB: ${GATEWAY_PASSWORD_DB}
     ports:
       - "8083:8080"
     depends_on:
@@ -28,9 +28,9 @@ services:
     env_file:
       - environment/be-local.env
     environment:
-      ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB:-jdbc:postgresql://db:5432/library}
-      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB:-library}
-      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB:-library}
+      ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB}
+      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
+      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
     ports:
       - "8084:8080"
     depends_on:
@@ -49,14 +49,14 @@ services:
     env_file:
       - environment/be-local.env
     environment:
-      LIBRARY_HOST_DB: ${LIBRARY_HOST_DB:-jdbc:postgresql://db:5432/library}
-      LIBRARY_USER_DB: ${LIBRARY_USER_DB:-library}
-      LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB:-library}
-      SHARED_DATA_THUMBNAILS: ${SHARED_DATA_THUMBNAILS-./docker/storage/thumbnails}
+      LIBRARY_HOST_DB: ${LIBRARY_HOST_DB}
+      LIBRARY_USER_DB: ${LIBRARY_USER_DB}
+      LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
+      SHARED_DATA_THUMBNAILS: ${SHARED_DATA_THUMBNAILS}
     ports:
       - "8085:8080"
     volumes:
-      - ${SHARED_DATA_THUMBNAILS-./docker/storage/thumbnails}:/app/thumbnails:rw
+      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
     depends_on:
       gateway:
         condition: service_healthy
