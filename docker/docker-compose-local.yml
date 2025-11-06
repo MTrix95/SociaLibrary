@@ -1,15 +1,14 @@
-version: '3.8'
-
 include:
-  - ../backend/docker-compose-be-local.yml
-  #- ../frontend/docker-compose-fe-local.yml
+  - ../backend/docker/docker-compose-be-local.yml
+  - ../frontend/docker/docker-compose-fe-local.yml
 
 services:
   db:
-    image: postgres/postgres:15.3-alpine
+    image: postgis/postgis
+    platform: linux/amd64
     restart: always
     env_file:
-      - locale/environment/local.env
+      - environment/local.env
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
@@ -17,8 +16,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database/data:/var/lib/postgresql/data #persistenza dati
-      - ./database/init:/docker-entrypoint-initdb.d #script di inizializzazione
+      - ./locale/database/data:/var/lib/postgresql/data #persistenza dati
+      - ./locale/database/init:/docker-entrypoint-initdb.d #script di inizializzazione
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
       interval: 10s
@@ -31,7 +30,7 @@ services:
     image: keycloak/keycloak:latest
     restart: always
     env_file:
-      - locale/environment/local.env
+      - environment/local.env
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-keycloak}
@@ -46,7 +45,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./keycloak/realm/data:/opt/keycloak/data/import
+      - ./locale/keycloak/realm/data:/opt/keycloak/data/import
     depends_on:
       db:
         condition: service_healthy
@@ -59,13 +58,13 @@ services:
       - net
     command:
       - start-dev
-      - --import-realm
 
   geoserver:
     image: docker.osgeo.org/geoserver:2.28.0
+    platform: linux/amd64
     restart: always
     env_file:
-      - locale/environment/local.env
+      - environment/local.env
     environment:
       GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER:-admin}
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD:-admin}
@@ -76,7 +75,7 @@ services:
       POSTGRES_USERNAME: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
-      - ./geoserver/data_dir:/opt/geoserver_data/
+      - ./locale/geoserver/data_dir:/opt/geoserver_data/
     ports:
       - "8081:8080"
     depends_on:

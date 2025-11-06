@@ -1,0 +1,10 @@
+# MICROSERVIZI FE
+services:
+  frontend:
+    build: ../
+    ports:
+      - "80:80"
+    environment:
+      API_GATEWAY_URL: ${API_GATEWAY_URL-http://gateway:8080/api/}
+    networks:
+      - net
