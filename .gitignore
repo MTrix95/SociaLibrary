@@ -38,6 +38,5 @@ build/
 .DS_Store
 
 ### Docker
-./docker/database/data/*
-./docker/geoserver/*
-./docker/environment/*
+./docker/locale/
+./frontend/node/
