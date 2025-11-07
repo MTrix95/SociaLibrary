@@ -35,9 +35,10 @@ build/
 .DS_Store
 
 ### Docker
-./docker/*
-!./docker/environment/local.env
-!./docker/locale/database/init
+./docker/
+!./docker/environment/.env.local
+!./docker/locale/database/init/
 !./docker/locale/keycloak/
-./backend/docker/*
-!./backend/docker/environment/be-local.env
+
+./backend/docker/
+!./backend/docker/environment/.env.local
