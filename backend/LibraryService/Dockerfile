@@ -10,6 +10,6 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21
 WORKDIR /app
 # Copio il jar una volta che è stato compilato
-COPY --from=builder /app/target/LibraryService-1.0.0.jar LibraryService.jar
+COPY --from=builder /app/target/LibraryService.jar LibraryService.jar
 
 ENTRYPOINT ["java", "-jar", "LibraryService.jar"]

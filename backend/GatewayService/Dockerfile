@@ -10,6 +10,6 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21-rc-jdk-oracle
 WORKDIR /app
 # Copio il jar una volta che è stato compilato
-COPY --from=builder /app/target/GatewayService-1.0.0.jar GatewayService.jar
+COPY --from=builder /app/target/GatewayService.jar GatewayService.jar
 
 ENTRYPOINT ["java", "-jar", "GatewayService.jar"]
