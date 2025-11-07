@@ -8,7 +8,7 @@ services:
     platform: linux/amd64
     restart: always
     env_file:
-      - environment/local.env
+      - ./environment/.env.local
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -19,7 +19,7 @@ services:
       - ./locale/database/data:/var/lib/postgresql/data #persistenza dati
       - ./locale/database/init:/docker-entrypoint-initdb.d #script di inizializzazione
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,7 +30,7 @@ services:
     image: keycloak/keycloak:latest
     restart: always
     env_file:
-      - environment/local.env
+      - ./environment/.env.local
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
@@ -64,7 +64,7 @@ services:
     platform: linux/amd64
     restart: always
     env_file:
-      - environment/local.env
+      - ./environment/.env.local
     environment:
       GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER}
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD}

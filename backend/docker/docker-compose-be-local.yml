@@ -3,7 +3,7 @@ services:
   gateway:
     build: ../GatewayService
     env_file:
-      - environment/be-local.env
+      - ./environment/.env.local
     environment:
       GATEWAY_HOST_DB: ${GATEWAY_HOST_DB}
       GATEWAY_USER_DB: ${GATEWAY_USER_DB}
@@ -26,7 +26,7 @@ services:
   administrator:
     build: ../AdministratorService
     env_file:
-      - environment/be-local.env
+      - ./environment/.env.local
     environment:
       ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB}
       ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
@@ -47,7 +47,7 @@ services:
   library:
     build: ../LibraryService
     env_file:
-      - environment/be-local.env
+      - ./environment/.env.local
     environment:
       LIBRARY_HOST_DB: ${LIBRARY_HOST_DB}
       LIBRARY_USER_DB: ${LIBRARY_USER_DB}
@@ -56,7 +56,7 @@ services:
     ports:
       - "8085:8080"
     volumes:
-      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
+      - ${SHARED_DATA_THUMBNAILS:-./locale/storage/thumbnails}:/app/thumbnails:rw
     depends_on:
       gateway:
         condition: service_healthy

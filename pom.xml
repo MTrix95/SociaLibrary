@@ -53,9 +53,7 @@
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>docker/locale/database/data/*</exclude>
-                        <exclude>docker/locale/geoserver/data_dir/*</exclude>
-                        <exclude>docker/locale/keycloak/realm/*</exclude>
+                        <exclude>docker/locale/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
