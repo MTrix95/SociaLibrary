@@ -56,7 +56,7 @@ services:
     ports:
       - "8085:8080"
     volumes:
-      - ${SHARED_DATA_THUMBNAILS:-./locale/storage/thumbnails}:/app/thumbnails:rw
+      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
     depends_on:
       gateway:
         condition: service_healthy

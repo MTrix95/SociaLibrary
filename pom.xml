@@ -1,49 +1,49 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>it.socialibrary</groupId>
-  <artifactId>SociaLibrary</artifactId>
-  <version>1.0.0</version>
-  <packaging>pom</packaging>
+    <groupId>it.socialibrary</groupId>
+    <artifactId>SociaLibrary</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
 
-  <name>SociaLibrary</name>
-  <description>Build FE for project SociaLibrary</description>
-  <developers>
-    <developer>
-      <name>Luca Tricarico</name>
-      <email>luca.tricarico@outlook.com</email>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-  </developers>
+    <name>SociaLibrary</name>
+    <description>Build FE for project SociaLibrary</description>
+    <developers>
+        <developer>
+            <name>Luca Tricarico</name>
+            <email>luca.tricarico@outlook.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
 
-      <modules>
+    <modules>
         <module>backend</module>
         <module>frontend</module>
-      </modules>
+    </modules>
 
-      <properties>
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-      </properties>
+    </properties>
 
-      <!-- PROFILES -->
-      <profiles>
+    <!-- PROFILES -->
+    <profiles>
         <profile>
-          <id>development</id>
-          <activation>
-            <activeByDefault>true</activeByDefault>
-          </activation>
-          <properties>
-            <build.profile.id>development</build.profile.id>
-            <maven.test.skip>true</maven.test.skip>
-            <maven.test.failure.ignore>true</maven.test.failure.ignore>
-          </properties>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>local</build.profile.id>
+                <maven.test.skip>true</maven.test.skip>
+                <maven.test.failure.ignore>true</maven.test.failure.ignore>
+            </properties>
         </profile>
-      </profiles>
+    </profiles>
 
     <build>
         <plugins>
