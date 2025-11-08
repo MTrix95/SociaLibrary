@@ -133,9 +133,6 @@
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <useDefaultDelimiters>true</useDefaultDelimiters>
-                    <filters>
-                        <filter>${basedir}/environment/${build.profile.id}.properties</filter>
-                    </filters>
                 </configuration>
             </plugin>
         </plugins>
