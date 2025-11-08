@@ -1,0 +1,5 @@
+logging:
+  level:
+    org.springframework: info
+    org.springframework.security: ${LOG_LEVEL}
+    org.springframework.oauth2: ${LOG_LEVEL}

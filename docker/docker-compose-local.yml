@@ -62,7 +62,7 @@ services:
   geoserver:
     image: docker.osgeo.org/geoserver:2.28.0
     platform: linux/amd64
-    restart: always
+    restart: on-failure
     env_file:
       - ./environment/.env.local
     environment:
