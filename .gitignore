@@ -40,7 +40,7 @@ build/
 /docker/locale/geoserver/*
 !/docker/environment/.env.local
 !/docker/locale/database/init/
-!/docker/locale/keycloak/
+!/docker/locale/keycloak/realm/
 
 /backend/docker/
 !/backend/docker/environment/.env.local
