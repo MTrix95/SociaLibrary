@@ -35,7 +35,6 @@ build/
 .DS_Store
 
 ### Docker
-/docker/locale/
 /docker/locale/database/*
 /docker/locale/geoserver/*
 !/docker/environment/.env.local
