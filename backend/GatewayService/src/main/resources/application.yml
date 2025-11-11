@@ -4,5 +4,6 @@ spring:
   application:
     name: GatewayService
 server:
+  port: 8083
   servlet:
     context-path: /social-library

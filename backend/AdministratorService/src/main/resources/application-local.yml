@@ -1,2 +1,6 @@
-
-    
+logging:
+  level:
+    org.springframework: info
+    org.springframework.security: ${LOG_LEVEL:DEBUG}
+    org.springframework.oauth2: ${LOG_LEVEL:DEBUG}
+    org.springframework.web: ${LOG_LEVEL:DEBUG}

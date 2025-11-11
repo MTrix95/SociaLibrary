@@ -5,8 +5,14 @@ services:
     env_file:
       - ./environment/.env.local
     ports:
-      - "80:80"
+      - "4200:4200"
     environment:
-      API_GATEWAY_URL: ${API_GATEWAY_URL}
+      REACT_APP_API_GATEWAY_URL: ${API_GATEWAY_URL},
+      REACT_APP_KC_SERVER: ${KC_SERVER}
+      REACT_APP_KC_CLIENT_ID: ${KC_CLIENT_ID}
+      REACT_APP_KC_REDIRECT_URI: ${KC_REDIRECT_URI}
+      REACT_APP_KC_RESPONSE_TYPE: ${KC_RESPONSE_TYPE}
+      REACT_APP_KC_SCOPE: ${KC_SCOPE}
+      REACT_APP_KC_POST_LOGOUT_REDIRECT_URI: ${KC_POST_LOGOUT_REDIRECT_URI}
     networks:
       - net

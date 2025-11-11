@@ -1,5 +1,8 @@
-FROM nginx:stable-alpine
-COPY target/build /usr/share/nginx/html
+FROM node:alpine
+WORKDIR /app
+COPY . /app
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+RUN npm install -g @angular/cli
+RUN npm install
+
+CMD ["ng", "serve", "--host", "0.0.0.0"]

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
     <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook" />
+
+    <property name="LOG_PATH" value="${SHARED_DATA_LOGS:-${project.basedir}}"/>
+
     <appender class="ch.qos.logback.core.ConsoleAppender" name="consoleAppender">
         <encoder>
             <charset>UTF-8</charset>
@@ -8,9 +11,9 @@
         </encoder>
     </appender>
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
-        <file>${project.basedir}/logs/${project.artifactId}.log</file>
+        <file>${LOG_PATH}/${project.artifactId}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${project.basedir}/logs/archived/${project.artifactId}_%d{yyyy-MM-dd}.%i.log.tar.gz</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/archived/${project.artifactId}_%d{yyyy-MM-dd}.%i.log.tar.gz</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <!-- Quando arriva a 10MB lo comprime, è crea un file vuoto! -->
             <maxHistory>2</maxHistory>
@@ -33,13 +36,6 @@
         <queueSize>262144</queueSize>
         <appender-ref ref="FILE" />
     </appender>
-
-    <!-- Fine appender asincroni -->
-    <logger name="org.springframework" level="INFO" />
-    <logger name="org.springframework.security" level="${log.level}" />
-    <logger name="org.springframework.security.oauth2" level="${log.level}" />
-    <logger name="org.springframework.web" level="${log.level}" />
-    <logger name="org.hibernate" level="${log.level}" />
 
     <!-- La root info per i log -->
     <root level="INFO">

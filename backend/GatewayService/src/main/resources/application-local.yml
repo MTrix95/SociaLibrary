@@ -1,5 +1,30 @@
 logging:
   level:
     org.springframework: info
-    org.springframework.security: ${LOG_LEVEL}
-    org.springframework.oauth2: ${LOG_LEVEL}
+    org.springframework.security: ${LOG_LEVEL:DEBUG}
+    org.springframework.oauth2: ${LOG_LEVEL:DEBUG}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/socialibrary}
+
+  cloud:
+    gateway:
+      routes:
+        - id: administrator-service
+          uri: ${ADMINISTRATOR_URL:http://localhost:8084/administrator}
+          predicates:
+            - Path=/api/administrator/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay
+        - id: library-service
+          uri: ${LIBRARY_URL:http://localhost:8085/library}
+          predicates:
+            - Path=/api/library/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay

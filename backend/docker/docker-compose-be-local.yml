@@ -10,16 +10,16 @@ services:
       GATEWAY_USER_DB: ${GATEWAY_USER_DB}
       GATEWAY_PASSWORD_DB: ${GATEWAY_PASSWORD_DB}
     ports:
-      - "8083:8080"
+      - "8083:8083"
     volumes:
-      - ${SHARED_DATA_LOGS}:/app/logs:rw
+      - ${SHARED_DATA_LOGS}:/temp/logs:rw
     depends_on:
       keycloak:
         condition: service_healthy
       db:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8080/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8083/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -36,14 +36,14 @@ services:
       ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
       ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
     ports:
-      - "8084:8080"
+      - "8084:8084"
     volumes:
-      - ${SHARED_DATA_LOGS}:/app/logs:rw
+      - ${SHARED_DATA_LOGS}:/temp/logs:rw
     depends_on:
       gateway:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8080/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8084/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -61,15 +61,15 @@ services:
       LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
       SHARED_DATA_THUMBNAILS: ${SHARED_DATA_THUMBNAILS}
     ports:
-      - "8085:8080"
+      - "8085:8085"
     volumes:
       - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
-      - ${SHARED_DATA_LOGS}:/app/logs:rw
+      - ${SHARED_DATA_LOGS}:/temp/logs:rw
     depends_on:
       gateway:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8080/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8085/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
