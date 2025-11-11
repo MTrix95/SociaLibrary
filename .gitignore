@@ -41,5 +41,6 @@ build/
 !/docker/locale/database/init/
 !/docker/locale/keycloak/realm/
 
-/backend/docker/
+/backend/docker/*
+/backend/docker/locale/logs/*
 !/backend/docker/environment/.env.local
