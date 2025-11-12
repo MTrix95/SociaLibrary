@@ -58,6 +58,7 @@ services:
       - net
     command:
       - start-dev
+      - --import-realm
 
   geoserver:
     image: docker.osgeo.org/geoserver:2.28.0

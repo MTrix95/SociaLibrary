@@ -19,7 +19,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8083/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://gateway:8083/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -43,7 +43,7 @@ services:
       gateway:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8084/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://administrator:8084/api/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -69,7 +69,7 @@ services:
       gateway:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8085/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://library:8085/api/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5

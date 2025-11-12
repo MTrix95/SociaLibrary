@@ -15,14 +15,14 @@ spring:
     gateway:
       routes:
         - id: administrator-service
-          uri: ${ADMINISTRATOR_URL:http://localhost:8084/administrator}
+          uri: ${ADMINISTRATOR_URL:http://localhost:8084/api/administrator}
           predicates:
             - Path=/api/administrator/**
           filters:
             - StripPrefix=1
             - TokenRelay
         - id: library-service
-          uri: ${LIBRARY_URL:http://localhost:8085/library}
+          uri: ${LIBRARY_URL:http://localhost:8085/api/library}
           predicates:
             - Path=/api/library/**
           filters:
