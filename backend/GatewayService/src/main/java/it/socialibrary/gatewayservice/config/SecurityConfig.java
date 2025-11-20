@@ -27,8 +27,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
 
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().denyAll()
+                        .anyRequest().fullyAuthenticated()
                 )
                 .oauth2ResourceServer(oauth ->
                         oauth.jwt(Customizer.withDefaults())

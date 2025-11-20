@@ -1,21 +1,22 @@
-import { Injectable } from '@angular/core';
-import {OAuthService} from 'angular-oauth2-oidc';
-import {authCodeFlowConfig} from '../constants/auth.config';
+import {Injectable, signal, WritableSignal} from '@angular/core';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { authCodeFlowConfig } from '../constants/auth.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
   constructor(private oauthService: OAuthService) {
     this.oauthService.configure(authCodeFlowConfig);
+    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {});
   }
-
 
   login() {
     this.oauthService.initCodeFlow();
   }
 
-  logout() {
+  logOut() {
     this.oauthService.logOut();
   }
 
@@ -24,6 +25,6 @@ export class AuthService {
   }
 
   getUserProfile() {
-    return this.oauthService.getIdentityClaims();
+    return this.oauthService.getIdentityClaims() ?? null;
   }
 }
