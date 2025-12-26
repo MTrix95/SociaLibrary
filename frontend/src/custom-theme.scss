@@ -16,9 +16,9 @@ html {
     density: 0,
   ));
 
-  @include mat.form-field-overrides((
-    //filled-container-color: transparent, // Sfondo quando è attivo
-    //hover-state-layer-opacity: 0%
+  @include mat.dialog-overrides((
+    container-elevation-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.5),
+    container-shape: rectangle,
   ));
 }
 

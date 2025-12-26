@@ -52,10 +52,10 @@
       </a>
       <!-- USER INFO -->
       <div class="p-2 border-t border-gray-300">
-        <button class="w-full flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-gray-200">
-          <!--<div class="w-10 h-10">
+        <button class="w-full flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-gray-200" (click)="openInfo()">
+          <div class="w-10 h-10">
             <img ngSrc="/img_avatar.png" width="40" height="40" alt="Avatar">
-          </div>-->
+          </div>
           <div class="flex-1 min-w-0 text-left">
             <p class="text-xs font-semibold truncate uppercase">{{ fullName }}</p>
             <p class="text-xs text-gray-500 truncate">{{ email }}</p>

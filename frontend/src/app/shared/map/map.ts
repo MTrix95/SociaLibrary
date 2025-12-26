@@ -7,14 +7,14 @@ import {fromLonLat} from 'ol/proj';
 import ControlScaleLine from 'ol/control/ScaleLine';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatIcon} from '@angular/material/icon';
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {Modal} from '../modal/modal';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-map',
+  standalone: true,
   template: `
     <!-- MAP CONTAINER -->
-    <div id="map" class="h-screen md:h-full lg:h-screen"></div>
+    <div id="map" class="h-screen md:h-full lg:h-screen drag-zone"></div>
     <div
       class="absolute left-1/2 bottom-12 z-40
          w-80 max-w-md sm:max-w-lg lg:max-w-xl
@@ -29,7 +29,6 @@ import {Modal} from '../modal/modal';
         <input
           #searchInput
           [formControl]="searchControl"
-          [matAutocomplete]="auto"
           type="text"
           placeholder="Cerca per autore, titolo o ISBN"
           aria-label="barra di ricerca su mappa"
@@ -40,13 +39,6 @@ import {Modal} from '../modal/modal';
         @if (searchControl.value) {
           <mat-icon class="text-gray-400 flex-shrink-0 cursor-pointer" (click)="searchControl.reset()">close</mat-icon>
         }
-        <!-- AUTOCOMPLETE -->
-        <mat-autocomplete #auto="matAutocomplete" class="!bg-white bottom-12">
-          @for (option of searchOptions; track option) {
-            <mat-option [value]="option">{{option}}</mat-option>
-          }
-          <mat-option></mat-option>
-        </mat-autocomplete>
       </div>
       <!-- SEARCH FIELD -->
     </div>`,
@@ -54,25 +46,12 @@ import {Modal} from '../modal/modal';
     FormsModule,
     ReactiveFormsModule,
     MatIcon,
-    MatIcon,
-    MatIcon,
-    MatAutocomplete,
-    MatOption,
-    MatAutocompleteTrigger,
-    Modal
   ],
   styles: []
 })
 export class MapComponent implements AfterViewInit {
   protected map?: Map;
   protected searchControl = new FormControl('');
-
-  protected readonly searchOptions: string[] = [
-    'Greenhund',
-    'Harry Potter: L\'ordine della fenice',
-    'Harry Potter: Il prigioniero di Azkaban',
-  ];
-
   constructor(private elementRef: ElementRef) {
   }
 

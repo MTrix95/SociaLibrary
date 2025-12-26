@@ -6,11 +6,6 @@ import {MatDrawer, MatDrawerContainer, MatDrawerContent} from '@angular/material
 @Component({
   selector: 'app-administrator',
   imports: [
-    MapComponent,
-    Navbar,
-    MatDrawerContainer,
-    MatDrawer,
-    MatDrawerContent
   ],
   templateUrl: './administrator.html',
   styleUrl: './administrator.css',

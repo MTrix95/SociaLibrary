@@ -1,6 +1,12 @@
-FROM openjdk:21-rc-jdk-oracle
-WORKDIR /app
-COPY /target/LibraryService.jar /app/LibraryService.jar
+FROM maven:eclipse-temurin
 
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "LibraryService.jar"]
+WORKDIR /app
+
+COPY pom.xml ./
+COPY LibraryService/ ./LibraryService/
+
+WORKDIR /app/LibraryService
+EXPOSE 8080 5005
+
+
+ENTRYPOINT ["mvn", "spring-boot:run", "-DskipTests"]

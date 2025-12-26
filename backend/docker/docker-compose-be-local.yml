@@ -1,7 +1,9 @@
 # MICROSERVIZI BE
 services:
   gateway:
-    build: ../GatewayService
+    build:
+      context: ..
+      dockerfile: GatewayService/Dockerfile
     env_file:
       - ./environment/.env.local
     environment:
@@ -28,7 +30,9 @@ services:
       - net
 
   administrator:
-    build: ../AdministratorService
+    build:
+      context: ..
+      dockerfile: AdministratorService/Dockerfile
     env_file:
       - ./environment/.env.local
     environment:
@@ -52,7 +56,9 @@ services:
       - net
 
   library:
-    build: ../LibraryService
+    build:
+      context: ..
+      dockerfile: LibraryService/Dockerfile
     env_file:
       - ./environment/.env.local
     environment:

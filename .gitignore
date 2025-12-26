@@ -44,3 +44,5 @@ build/
 /backend/docker/*
 /backend/docker/locale/logs/*
 !/backend/docker/environment/.env.local
+
+/logs/

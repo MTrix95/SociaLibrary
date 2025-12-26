@@ -1,18 +1,13 @@
 # MICROSERVIZI FE
 services:
-  frontend:
-    build: ../
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
     env_file:
       - ./environment/.env.local
     ports:
       - "4200:4200"
-    environment:
-      REACT_APP_API_GATEWAY_URL: ${API_GATEWAY_URL},
-      REACT_APP_KC_SERVER: ${KC_SERVER}
-      REACT_APP_KC_CLIENT_ID: ${KC_CLIENT_ID}
-      REACT_APP_KC_REDIRECT_URI: ${KC_REDIRECT_URI}
-      REACT_APP_KC_RESPONSE_TYPE: ${KC_RESPONSE_TYPE}
-      REACT_APP_KC_SCOPE: ${KC_SCOPE}
-      REACT_APP_KC_POST_LOGOUT_REDIRECT_URI: ${KC_POST_LOGOUT_REDIRECT_URI}
-    networks:
-      - net
+    volumes:
+      - /app/node_modules
+      - ..:/app

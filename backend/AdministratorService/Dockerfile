@@ -1,7 +1,12 @@
-#STAGE 2: START
-FROM openjdk:21-rc-jdk-oracle
-WORKDIR /app
-COPY /target/AdministratorService.jar /app/AdministratorService.jar
+FROM maven:eclipse-temurin
 
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "AdministratorService.jar"]
+WORKDIR /app
+
+COPY pom.xml ./
+COPY AdministratorService/ ./AdministratorService/
+
+WORKDIR /app/AdministratorService
+EXPOSE 8080 5005
+
+
+ENTRYPOINT ["mvn", "spring-boot:run", "-DskipTests"]
