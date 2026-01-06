@@ -130,11 +130,13 @@ export class SidebarComponent {
       header: 'Ricerca',
       width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
       height: '90vh',     // Altezza quasi a tutto schermo
+      contentStyle: { padding: '2' },
       position: 'topright', // Verrà posizionato al centro della pagina
       baseZIndex: 10000,
       modal: false, // Evito che ci sia l'overlay dietro alla modale
       maximizable: true,   // Permette all'utente di espandere la
       resizable: false, // Non permette all'utente di ridimensionare la modale
+      closable: true,
     });
   }
 
@@ -144,13 +146,13 @@ export class SidebarComponent {
       width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
       height: '90vh',     // Altezza quasi a tutto schermo
       position: 'topright', // Verrà posizionato al centro della pagina
-      contentStyle: { overflow: 'auto' },
+      contentStyle: { padding: '0' },
       baseZIndex: 10000,
       modal: false, // Evito che ci sia l'overlay dietro alla modale
       maximizable: true,   // Permette all'utente di espandere la
-      resizable: false, // Non permette all'utente di ridimensionare la modale
-      styleClass: 'rounded-xl! shadow-2xl! border-none! overflow-hidden! p-3!',
-    });
+      resizable: false, // Non permette all'utente di ridimensionare la modalr
+      styleClass: 'shadow-2xl! border-none! overflow-hidden! p-3!',
+      });
   }
 
   get fullName(): string {

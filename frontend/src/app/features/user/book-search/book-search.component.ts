@@ -2,6 +2,8 @@ import {Component, inject} from '@angular/core';
 import {BookListComponent} from './components/book-list/book-list.component';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {SearchFormComponent} from './components/search-form/search-form.component';
+import {BookSearchFilter} from '../../../shared/models/book-search-filter';
+import {BookSearchService} from './services/book-search.service';
 
 @Component({
   selector: 'app-book-search',
@@ -12,16 +14,16 @@ import {SearchFormComponent} from './components/search-form/search-form.componen
   ],
   providers: [ DialogService ],
   template: `
-    <div class="flex flex-col h-full max-h-[calc(90vh-120px)] bg-white">
+    <div class="flex flex-col h-full bg-white">
       <!-- Contenuto -->
-      <div class="flex-1 pr-2 flex flex-col gap-6 pt-2">
+      <div class="flex-1 flex flex-col gap-6">
         <!-- Sezione Ricerca -->
         <div class="flex flex-col gap-1.5 w-full">
-          <app-search-form></app-search-form>
+          <app-search-form (searchFilter)="onSearchHandler($event)"></app-search-form>
         </div>
 
         <!-- Sezione Lista/Tabella -->
-        <div class="flex flex-col gap-1.5 w-full mb-4 flex-1 min-h-0 pr-2">
+        <div class="flex flex-col gap-1.5 w-full mb-4 flex-1 min-h-0">
           <label class="text-gray-400 text-[13px] uppercase font-bold ml-1 tracking-widest">Risultati</label>
           <div class="rounded-xl border border-gray-100 overflow-hidden shadow-sm">
             <app-book-list></app-book-list>
@@ -30,7 +32,7 @@ import {SearchFormComponent} from './components/search-form/search-form.componen
       </div>
 
       <!-- Footer -->
-      <div class="flex justify-end pt-6 pb-2 bg-white border-t border-gray-50 shrink-0">
+      <div class="flex justify-end">
         <button (click)="close()" class="px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
           <i class="pi pi-times"></i>
           Chiudi
@@ -42,8 +44,13 @@ import {SearchFormComponent} from './components/search-form/search-form.componen
 })
 export class BookSearchComponent {
   private ref = inject(DynamicDialogRef);
+  private bookSearchService: BookSearchService = inject(BookSearchService);
 
   close() {
     this.ref.close();
+  }
+
+  protected onSearchHandler(filters: BookSearchFilter) {
+
   }
 }

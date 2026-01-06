@@ -40,4 +40,8 @@ html, body { height: 100%; margin: 0; padding: 0; }
   .library-input-group:focus-within i {
     @apply text-gray-900;
   }
+
+  .p-dialog-header {
+    @apply p-3;
+  }
 }

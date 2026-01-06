@@ -1,16 +1,18 @@
 import {Component, inject, signal} from '@angular/core';
 import {BookService} from '../../../book-management/services/book-service';
 import {TableModule} from 'primeng/table';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-book-list',
   imports: [
-    TableModule
+    TableModule,
+    Tooltip
   ],
   template: `
     <p-table
       [value]="books()"
-      [rows]="10"
+      [rows]="5"
       [paginator]="true"
     >
       <ng-template pTemplate="header">
@@ -23,12 +25,15 @@ import {TableModule} from 'primeng/table';
       </ng-template>
       <ng-template pTemplate="body" let-book>
         <tr class="hover:bg-gray-50/50 transition-colors border-b border-gray-50 last:border-0">
-          <td class="py-4! text-sm font-medium text-gray-900">{{ book.title }}</td>
-          <td class="py-4! text-sm text-gray-600">{{ book.author }}</td>
-          <td class="py-4! text-gray-500 font-mono text-xs">{{ book.isbn }}</td>
-          <td class="py-4! text-center">
-            <button class="p-2 text-gray-400 hover:text-gray-900 transition-colors cursor-pointer">
+          <td class="p-2.5! text-sm font-medium text-gray-900">{{ book.title }}</td>
+          <td class="p-2.5! text-sm text-gray-600">{{ book.author }}</td>
+          <td class="p-2.5! text-gray-500 font-mono text-xs">{{ book.isbn }}</td>
+          <td class="p-2.5! text-center">
+            <button pTooltip="Apri dettaglio" class="p-2 text-gray-400 hover:text-gray-900 transition-colors cursor-pointer">
               <i class="pi pi-ellipsis-v"></i>
+            </button>
+            <button pTooltip="Visualizza in mappa" class="p-2 text-gray-400 hover:text-gray-900 transition-colors cursor-pointer">
+              <i class="pi pi-map-marker"></i>
             </button>
           </td>
         </tr>
@@ -54,6 +59,6 @@ export class BookListComponent {
 
   protected books = signal<any[]>([
     { title: 'Il Nome della Rosa', author: 'Umberto Eco', isbn: '978-8845278655' },
-    { title: '1984', author: 'George Orwell', isbn: '978-0451524935' }
+    { title: '1984', author: 'George Orwell', isbn: '978-0451524935' },
   ]);
 }

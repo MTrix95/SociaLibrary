@@ -39,8 +39,6 @@ export class AuthService {
     if(!this.isAuthenticated()) {
       this.userProfile.set(null);
     } else {
-      debugger;
-
       const claims = this.getUserClaims ?? null;
       this.userProfile.set(claims);
     }

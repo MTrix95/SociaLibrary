@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {Component, computed, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {Fieldset} from 'primeng/fieldset';
 import {DatePicker} from 'primeng/datepicker';
+import {SelectButton} from 'primeng/selectbutton';
+import {InputNumber} from 'primeng/inputnumber';
+import {LocationService} from '../../../../../core/services/location.service';
+import {BookSearchFilter} from '../../../../../shared/models/book-search-filter';
 
 @Component({
   selector: 'app-search-form',
@@ -10,7 +14,10 @@ import {DatePicker} from 'primeng/datepicker';
     FormsModule,
     InputText,
     Fieldset,
-    DatePicker
+    DatePicker,
+    SelectButton,
+    InputNumber,
+    ReactiveFormsModule
   ],
   template: `
     <p-fieldset
@@ -19,82 +26,88 @@ import {DatePicker} from 'primeng/datepicker';
       legend="Filtri"
       styleClass="rounded-xl! p-3! shadow-sm! border! border-gray-100! bg-white! overflow-hidden!"
     >
-      <div class="flex flex-col gap-3">
-        <!-- Riga 1 -->
-        <div class="flex flex-col md:flex-row gap-4 w-full">
-          <!-- 1/3: Titolo -->
-          <div class="flex flex-col gap-1.5 flex-1">
-            <label class="text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest">Titolo Libro</label>
-            <div class="relative">
-              <i class="pi pi-book absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input pInputText placeholder="Titolo..."
-                     class="w-full bg-gray-50! border-gray-200! text-gray-700! rounded-xl! p-3 pl-11 shadow-sm focus:border-gray-900!"/>
-            </div>
-          </div>
-
-          <!-- 1/3: Editore (Il nuovo input) -->
-          <div class="flex flex-col gap-1.5 flex-1">
-            <label class="text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest">Editore</label>
-            <div class="relative">
-              <i class="pi pi-building absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input pInputText placeholder="Casa editrice..."
-                     class="w-full bg-gray-50! border-gray-200! text-gray-700! rounded-xl! p-3 pl-11 shadow-sm focus:border-gray-900!"/>
-            </div>
-          </div>
-
-          <!-- 1/3: Autore -->
-          <div class="flex flex-col gap-1.5 flex-1">
-            <label class="text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest">Autore</label>
-            <div class="relative">
-              <i class="pi pi-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input pInputText placeholder="Autore..."
-                     class="w-full bg-gray-50! border-gray-200! text-gray-700! rounded-xl! p-3 pl-11 shadow-sm focus:border-gray-900!"/>
-            </div>
-          </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex justify-center">
+          <p-selectbutton [options]="stateOptions()" [(ngModel)]="searchSelected" size="small" [allowEmpty]="false" unselectable="true" optionLabel="label" optionValue="value" optionDisabled="disabled"></p-selectbutton>
         </div>
 
-        <!-- Riga 2: ISBN, Categoria e Anno -->
-        <div class="flex flex-col md:flex-row gap-4 w-full">
-          <div class="flex flex-col gap-1.5 flex-2">
-            <label class="text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest">Codice ISBN</label>
-            <div class="relative">
-              <i class="pi pi-barcode absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input pInputText placeholder="ISBN..."
-                     class="w-full bg-gray-50! border-gray-200! text-gray-700! rounded-xl! p-3 pl-11 shadow-sm focus:border-gray-900!"/>
+        <form class="flex flex-col gap-3" [formGroup]="searchForm" (ngSubmit)="onSearch()">
+          <!-- RICERCA TESTUALE -->
+          @if(searchSelected === 'text') {
+            <!-- Riga 1 -->
+            <div class="flex flex-col md:flex-row gap-4 w-full">
+              <!-- 1/3: Titolo -->
+              <div class="library-input-group">
+                <label class="library-input-label">Titolo Libro</label>
+                <i class="pi pi-book"></i>
+                <input pInputText formControlName="title" placeholder="Titolo..." class="library-input-field"/>
+              </div>
+
+              <!-- 1/3: Editore -->
+              <div class="library-input-group">
+                <label class="library-input-label">Editore</label>
+                <i class="pi pi-building "></i>
+                <input pInputText formControlName="publisher" placeholder="Casa editrice..." class="library-input-field"/>
+
+              </div>
+
+              <!-- 1/3: Autore -->
+              <div class="library-input-group">
+                <label class="library-input-label">Autore</label>
+                <i class="pi pi-user"></i>
+                <input pInputText formControlName="author" placeholder="Autore..." class="library-input-field"/>
+              </div>
             </div>
-          </div>
-          <div class="flex flex-col gap-1.5 flex-2">
-            <label class="text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest">Categoria</label>
-            <div class="relative">
-              <i class="pi pi-tag absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input pInputText placeholder="Genere..."
-                     class="w-full bg-gray-50! border-gray-200! text-gray-700! rounded-xl! p-3 pl-11 shadow-sm focus:border-gray-900!"/>
+
+            <!-- Riga 2: ISBN, Categoria e Anno -->
+            <div class="flex flex-col md:flex-row gap-4 w-full">
+              <div class="library-input-group">
+                <label class="library-input-label">Codice ISBN</label>
+                <i class="pi pi-barcode"></i>
+                <input pInputText formControlName="isbn" placeholder="ISBN..." class="library-input-field"/>
+              </div>
+              <div class="library-input-group">
+                <label class="library-input-label">Categoria</label>
+                <i class="pi pi-tag"></i>
+                <input pInputText formControlName="genre" placeholder="Genere..." class="library-input-field"/>
+              </div>
+              <div class="library-input-group">
+                <label class="library-input-label">Data Pubblicazione</label>
+                <i class="pi pi-calendar"></i>
+                <p-datepicker
+                  formControlName="publishedDate"
+                  dateFormat="dd/mm/yy"
+                  placeholder="Seleziona data"
+                  [showIcon]="false"
+                  appendTo="body"
+                  inputStyleClass="library-input-field"></p-datepicker>
+              </div>
             </div>
-          </div>
-          <div class="flex flex-col gap-1.5 flex-1">
-            <label class="text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest">Data Pubblicazione</label>
-            <div class="relative w-full"> <!-- Altezza fissa per bloccare il layout -->
-              <!-- Icona con z-index più alto -->
-              <i
-                class="pi pi-calendar absolute left-4 top-1/2 -translate-y-1/2 z-20 text-gray-400 pointer-events-none"></i>
-              <p-datepicker
-                dateFormat="dd/mm/yy"
-                placeholder="Seleziona data"
-                [showIcon]="false"
-                appendTo="body"
-                [class]="'w-full'"
-                inputStyleClass="w-full bg-gray-50! border-gray-200! text-gray-700! rounded-xl! p-3 pl-11 shadow-sm focus:border-gray-900!"></p-datepicker>
+          } @else {
+            <!-- RICERCA SPAZIALE -->
+            <div class="library-input-group">
+              <label class="library-input-label">Distanza da te (KM)</label>
+              <i class="pi pi-map-marker"></i>
+              <p-inputnumber
+                formControlName="radius"
+                mode="decimal"
+                [min]="1"
+                [max]="30"
+                suffix=" km"
+                placeholder="Esempio: 10 km"
+                inputStyleClass="library-input-field">
+              </p-inputnumber>
             </div>
-          </div>
-        </div>
+          }
+        </form>
 
         <!-- FOOTER -->
         <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
-          <button
+          <button (click)="onReset()"
             class="px-6 py-3 rounded-xl text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer">
             Reset
           </button>
-          <button
+          <button (click)="onSearch()"
             class="px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
             <i class="pi pi-search"></i>
             Ricerca
@@ -105,6 +118,51 @@ import {DatePicker} from 'primeng/datepicker';
   `,
   styles: ``,
 })
-export class SearchFormComponent {
+export class SearchFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
 
+  protected locationService: LocationService = inject(LocationService);
+
+  protected searchForm!: FormGroup;
+  protected searchSelected: string = 'text';
+  protected readonly stateOptions = computed(() => [
+    { label: 'Testuale', value: 'text', disabled: false },
+    { label: 'Spaziale', value: 'geom', disabled: !this.locationService.isLocationEnabled() }
+  ]);
+
+  @Output() searchFilter = new EventEmitter<BookSearchFilter>();
+
+  ngOnInit(): void {
+    // Inizializzo il fromGroup
+    this.searchForm = this.fb.group({
+      title: new FormControl({ value: '', disabled: false }, { validators: [] }),
+      author: new FormControl({ value: '', disabled: false }, { validators: [] }),
+      genre: new FormControl({ value: '', disabled: false }, { validators: [] }),
+      isbn: new FormControl({ value: '', disabled: false }, { validators: [] }),
+      publisher: new FormControl({ value: '', disabled: false }, { validators: [] }),
+      publishedDate: new FormControl({ value: null, disabled: false }, { validators: [] }),
+      radius: new FormControl({ value: 10, disabled: !this.locationService.isLocationEnabled() }, { validators: [] })
+    });
+  }
+
+  onSearch() {
+    const rawValue = this.searchForm.value;
+    const filters: BookSearchFilter = {...rawValue};
+
+    if(this.searchSelected == 'geom') {
+      const coords = this.locationService.userCoordinates();
+      if(coords) {
+        filters.location = {...coords};
+      }
+    }
+
+    console.log('filtri: ', filters);
+    this.searchFilter.emit(filters);
+  }
+
+  onReset() {
+    this.searchForm.reset({
+      radius: 10
+    });
+  }
 }
