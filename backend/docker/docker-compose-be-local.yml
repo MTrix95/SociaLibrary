@@ -4,24 +4,22 @@ services:
     build:
       context: ..
       dockerfile: GatewayService/Dockerfile
+    restart: on-failure
     env_file:
-      - ./environment/.env.local
+      - environments/.env.local
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
-      GATEWAY_HOST_DB: ${GATEWAY_HOST_DB}
-      GATEWAY_USER_DB: ${GATEWAY_USER_DB}
-      GATEWAY_PASSWORD_DB: ${GATEWAY_PASSWORD_DB}
     ports:
-      - "8083:8083"
+      - "${GATEWAY_PORT}:8083"
     volumes:
       - ${SHARED_DATA_LOGS}:/temp/logs:rw
     depends_on:
-      keycloak:
-        condition: service_healthy
       db:
         condition: service_healthy
+      keycloak:
+        condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://gateway:8083/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8083/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -29,56 +27,60 @@ services:
     networks:
       - net
 
-  administrator:
-    build:
-      context: ..
-      dockerfile: AdministratorService/Dockerfile
-    env_file:
-      - ./environment/.env.local
-    environment:
-      ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB}
-      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
-      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
-    ports:
-      - "8084:8084"
-    volumes:
-      - ${SHARED_DATA_LOGS}:/temp/logs:rw
-    depends_on:
-      gateway:
-        condition: service_healthy
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://administrator:8084/api/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 20s
-    networks:
-      - net
-
-  library:
-    build:
-      context: ..
-      dockerfile: LibraryService/Dockerfile
-    env_file:
-      - ./environment/.env.local
-    environment:
-      LIBRARY_HOST_DB: ${LIBRARY_HOST_DB}
-      LIBRARY_USER_DB: ${LIBRARY_USER_DB}
-      LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
-      SHARED_DATA_THUMBNAILS: ${SHARED_DATA_THUMBNAILS}
-    ports:
-      - "8085:8085"
-    volumes:
-      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
-      - ${SHARED_DATA_LOGS}:/temp/logs:rw
-    depends_on:
-      gateway:
-        condition: service_healthy
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent http://library:8085/api/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 20s
-    networks:
-      - net
+#  administrator:
+#    build:
+#      context: ..
+#      dockerfile: AdministratorService/Dockerfile
+#    restart: on-failure
+#    env_file:
+#      - ./environments/.env.local
+#    environment:
+#      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
+#      ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB}
+#      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
+#      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
+#    ports:
+#      - "${ADMINISTRATOR_PORT}:8084"
+#    volumes:
+#      - ${SHARED_DATA_LOGS}:/temp/logs:rw
+#    depends_on:
+#      gateway:
+#        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8084/api/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 20s
+#    networks:
+#      - net
+#
+#  library:
+#    build:
+#      context: ..
+#      dockerfile: LibraryService/Dockerfile
+#    restart: on-failure
+#    env_file:
+#      - ./environments/.env.local
+#    environment:
+#      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
+#      LIBRARY_HOST_DB: ${LIBRARY_HOST_DB}
+#      LIBRARY_USER_DB: ${LIBRARY_USER_DB}
+#      LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
+#      SHARED_DATA_THUMBNAILS: ${SHARED_DATA_THUMBNAILS}
+#    ports:
+#      - "${LIBRARY_PORT}:8085"
+#    volumes:
+#      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
+#      - ${SHARED_DATA_LOGS}:/temp/logs:rw
+#    depends_on:
+#      gateway:
+#        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8085/api/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 20s
+#    networks:
+#      - net

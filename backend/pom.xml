@@ -14,10 +14,14 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <maven-compile.version>3.14.1</maven-compile.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.34</lombok.version>
         <jts.core.version>1.20.0</jts.core.version>
         <jacoco.version>0.8.14</jacoco.version>
+        <thumbnailator.version>0.4.21</thumbnailator.version>
+
+        <!-- SPRING -->
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <spring-dependecies.version>3.5.7</spring-dependecies.version>
     </properties>
@@ -55,6 +59,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-dependecies.version}</version>
                     <executions>
                         <execution>
                             <goals>
@@ -77,6 +82,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compile.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>

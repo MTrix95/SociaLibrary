@@ -12,6 +12,8 @@ RUN mvn clean package
 
 # Stage 2: Esecuzione
 FROM eclipse-temurin:21-jre-alpine
+# Installo CURL in quanto mi è utile per l'health check di docker
+RUN apk add --no-cache curl
 WORKDIR /app
 
 # Copio il file generato dallo stage 1

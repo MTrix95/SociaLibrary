@@ -1,26 +1,20 @@
-import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {Navbar} from './shared/navbar/navbar';
-import {
-  MatSidenav,
-  MatSidenavContainer,
-  MatSidenavContent
-} from '@angular/material/sidenav';
-import {Sidebar} from './shared/sidebar/sidebar';
-
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { MapComponent } from './shared/components/map/map.component';
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [
     RouterOutlet,
-    Navbar,
-    MatSidenavContainer,
-    MatSidenav,
-    MatSidenavContent,
-    Sidebar,
+    ButtonModule,
+    SidebarComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
+
 }

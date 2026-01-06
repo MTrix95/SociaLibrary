@@ -6,15 +6,15 @@ services:
   db:
     image: postgis/postgis
     platform: linux/amd64
-    restart: always
+    restart: on-failure
     env_file:
-      - ./environment/.env.local
+      - ./environments/.env.local
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - ./locale/database/data:/var/lib/postgresql/data #persistenza dati
       - ./locale/database/init:/docker-entrypoint-initdb.d #script di inizializzazione
@@ -28,9 +28,9 @@ services:
 
   keycloak:
     image: keycloak/keycloak:latest
-    restart: always
+    restart: on-failure
     env_file:
-      - ./environment/.env.local
+      - ./environments/.env.local
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
@@ -42,8 +42,12 @@ services:
       # METRICHE
       KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED}
       KC_METRICS_ENABLED: ${KC_METRICS_ENABLED}
+
+      KC_HOSTNAME_URL: http://localhost:4200
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROXY_HEADERS: xforwarded
     ports:
-      - "8080:8080"
+      - "${KC_PORT}:8080"
     volumes:
       - ./locale/keycloak/realm/data:/opt/keycloak/data/import
     depends_on:
@@ -65,7 +69,7 @@ services:
     platform: linux/amd64
     restart: on-failure
     env_file:
-      - ./environment/.env.local
+      - ./environments/.env.local
     environment:
       GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER}
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD}
@@ -78,7 +82,7 @@ services:
     volumes:
       - ./locale/geoserver/data_dir:/opt/geoserver_data/
     ports:
-      - "8081:8080"
+      - "${GEOSERVER_PORT}:8080"
     depends_on:
       db:
         condition: service_healthy

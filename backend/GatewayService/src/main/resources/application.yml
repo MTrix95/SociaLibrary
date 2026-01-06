@@ -1,8 +1,9 @@
 spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
   application:
     name: GatewayService
+  profiles:
+    default: local
+    active: ${SPRING_PROFILES_ACTIVE:}
 server:
   port: 8083
   servlet:

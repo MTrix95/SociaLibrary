@@ -1,10 +1,43 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "tailwindcss-primeui";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "primeicons/primeicons.css";
 
-.tw-dialog-panel .mat.mdc-dialog-surface {
-  @apply bg-transparent shadow-none p-0;
+html, body { height: 100%; margin: 0; padding: 0; }
+
+@layer components {
+  /* Contenitore principale per input con icone */
+  .library-input-group {
+    @apply relative flex flex-col gap-1.5 flex-1;
+  }
+
+  /* LABEL */
+  .library-input-label {
+    @apply text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest pointer-events-none;
+  }
+
+  /* DEFAULT FIELD */
+  .library-input-field {
+    @apply w-full bg-gray-50 border-gray-200 text-gray-700 rounded-xl p-3 shadow-sm transition-all;
+  }
+
+  /* ICONA */
+  .library-input-group i {
+    @apply absolute left-4 top-11.5 -translate-y-1/2 text-gray-400 z-10 transition-colors;
+  }
+
+  /* Se il gruppo contiene un'icona, aggiungi il padding all'input automaticamente */
+  .library-input-group:has(i) .library-input-field {
+    @apply pl-11;
+  }
+
+  /* FOCUS */
+  .library-input-field:focus {
+    @apply border-gray-900 ring-1 ring-gray-900/10 outline-none;
+  }
+
+  /* Cambia colore all'icona quando l'input è in focus */
+  .library-input-group:focus-within i {
+    @apply text-gray-900;
+  }
 }
-
-

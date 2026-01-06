@@ -1,6 +1,5 @@
 package it.socialibrary.gatewayservice.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    /**
+     * Configures stateless security filter chain with OAuth 2.0
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -26,7 +28,6 @@ public class SecurityConfig {
                         // API pubbliche
                         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
-
                         .anyRequest().fullyAuthenticated()
                 )
                 .oauth2ResourceServer(oauth ->
