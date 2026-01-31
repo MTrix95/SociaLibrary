@@ -3,11 +3,10 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from '../../app.routes';
 import {providePrimeNG} from 'primeng/config';
-import {provideOAuthClient} from 'angular-oauth2-oidc';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {DefaultOAuthInterceptor, provideOAuthClient} from 'angular-oauth2-oidc';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi} from '@angular/common/http';
 import {errorInterceptor} from '../interceptors/error-interceptor';
 import Aura from '@primeuix/themes/aura';
-import {DialogService} from 'primeng/dynamicdialog';
 
 
 export const appConfig: ApplicationConfig = {
@@ -15,13 +14,17 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors(
-        [ errorInterceptor ]
-      )
+      withInterceptors([errorInterceptor]),
+      withInterceptorsFromDi()
     ),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: DefaultOAuthInterceptor,
+      multi: true
+    },
     provideOAuthClient({
         resourceServer: {
-          allowedUrls: ['/api'],
+          allowedUrls: ['http://localhost:4200/api', '/api'],
           sendAccessToken: true
         }
     }),
@@ -31,9 +34,9 @@ export const appConfig: ApplicationConfig = {
         options: {
           cssLayer: {
             name: 'primeng',
-            order: 'theme, base, primeng' // Tailwind ha la priorità su PrimeNG
+            order: 'theme, base, primeng'
           },
-          darkModeSelector: false  // Disabilita darkmode
+          darkModeSelector: false
         }
       }
     })

@@ -26,22 +26,9 @@ import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
           </div>
         </div>
       </div>
-
-      <!-- Footer Fisso (Sempre visibile in fondo) -->
-      <div class="flex justify-end pt-6 pb-2 bg-white border-t border-gray-50 shrink-0">
-        <button
-          (click)="close()"
-          class="w-full sm:w-auto px-10 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black cursor-pointer transition-colors active:scale-95">
-          Chiudi
-        </button>
-      </div>
     </div>
   `,
 })
 export class BookManagementComponent {
-  private ref = inject(DynamicDialogRef);
 
-  close() {
-    this.ref.close();
-  }
 }

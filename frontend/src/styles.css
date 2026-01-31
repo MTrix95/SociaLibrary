@@ -41,7 +41,25 @@ html, body { height: 100%; margin: 0; padding: 0; }
     @apply text-gray-900;
   }
 
+  /* STILI TABELLA */
+  .library-table-header {
+    @apply bg-transparent text-gray-400 text-[11px] uppercase font-bold tracking-widest py-4;
+  }
+
+  .library-table-cell {
+    @apply p-2.5 text-sm text-gray-600;
+  }
+
   .p-dialog-header {
     @apply p-3;
+  }
+
+  .p-paginator .p-paginator-page,
+  .p-paginator .p-paginator-page-selected {
+    @apply focus:bg-gray-500 focus:text-white ;
+  }
+
+  .p-dialog-footer {
+    @apply pl-6 pr-6 pb-3.75;
   }
 }

@@ -9,6 +9,7 @@ import {UserProfileComponent} from '../user-profile/user-profile.component';
 import {BookManagementComponent} from '../../../features/user/book-management/book-management.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {BookSearchComponent} from '../../../features/user/book-search/book-search.component';
+import {FooterComponent} from '../dialog/components/footer/footer.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +25,7 @@ import {BookSearchComponent} from '../../../features/user/book-search/book-searc
   template: `
     <!-- Sidebar -->
     <aside
-      class="w-20 lg:w-64 flex flex-col h-screen bg-gray-900 text-gray-300 border-r border-gray-800 sticky top-0 overflow-hidden transition-all duration-300">
+      class="w-20 lg:w-64 flex flex-col h-screen bg-gray-900 text-gray-300 border-r border-gray-800 overflow-hidden transition-all duration-300">
 
       <!-- Header -->
       <header class="flex items-center justify-center p-4 lg:p-6 border-b border-gray-800 shrink-0">
@@ -45,7 +46,6 @@ import {BookSearchComponent} from '../../../features/user/book-search/book-searc
                    [class.cursor-pointer]="!item.items"
                    [class.cursor-default]="item.items"
                    class="flex items-center justify-center lg:justify-start gap-3 p-3 rounded-lg text-sm font-semibold transition-all">
-
                 <i [class]="item.icon + ' text-xl'" class="w-6 text-center"></i>
                 <span class="hidden lg:inline">{{ item.label }}</span>
               </div>
@@ -128,30 +128,41 @@ export class SidebarComponent {
   protected openSearch() {
     this.dialogService.open(BookSearchComponent, {
       header: 'Ricerca',
+      data: {
+        isSaveEnabled: false,
+      },
       width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
       height: '90vh',     // Altezza quasi a tutto schermo
-      contentStyle: { padding: '2' },
+      contentStyle: { 'padding': '0 24px', 'height': '100%' },
       position: 'topright', // Verrà posizionato al centro della pagina
       baseZIndex: 10000,
       modal: false, // Evito che ci sia l'overlay dietro alla modale
       maximizable: true,   // Permette all'utente di espandere la
       resizable: false, // Non permette all'utente di ridimensionare la modale
       closable: true,
+      templates: {
+        footer: FooterComponent
+      }
     });
   }
 
   protected openManagementBooks() {
       this.dialogService.open(BookManagementComponent, {
-      header: 'Gestione',
-      width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
-      height: '90vh',     // Altezza quasi a tutto schermo
-      position: 'topright', // Verrà posizionato al centro della pagina
-      contentStyle: { padding: '0' },
-      baseZIndex: 10000,
-      modal: false, // Evito che ci sia l'overlay dietro alla modale
-      maximizable: true,   // Permette all'utente di espandere la
-      resizable: false, // Non permette all'utente di ridimensionare la modalr
-      styleClass: 'shadow-2xl! border-none! overflow-hidden! p-3!',
+        header: 'Gestione',
+        data: {
+          isSaveEnabled: false,
+        },
+        width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
+        height: '90vh',     // Altezza quasi a tutto schermo
+        position: 'topright', // Verrà posizionato al centro della pagina
+        contentStyle: { 'padding': '0 24px', 'height': '100%' },
+        baseZIndex: 10000,
+        modal: false, // Evito che ci sia l'overlay dietro alla modale
+        maximizable: true,   // Permette all'utente di espandere la
+        resizable: false, // Non permette all'utente di ridimensionare la modalr
+        templates: {
+          footer: FooterComponent
+        }
       });
   }
 

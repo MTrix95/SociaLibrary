@@ -1,12 +1,12 @@
-import {Component, computed, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {Component, computed, EventEmitter, inject, OnInit, output, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {Fieldset} from 'primeng/fieldset';
 import {DatePicker} from 'primeng/datepicker';
 import {SelectButton} from 'primeng/selectbutton';
 import {InputNumber} from 'primeng/inputnumber';
-import {LocationService} from '../../../../../core/services/location.service';
-import {BookSearchFilter} from '../../../../../shared/models/book-search-filter';
+import {LocationService} from '../../../../../shared/components/map/services/location.service';
+import {BookFilter} from '../../../../../shared/models/book-filter';
 
 @Component({
   selector: 'app-search-form',
@@ -24,7 +24,7 @@ import {BookSearchFilter} from '../../../../../shared/models/book-search-filter'
       [toggleable]="true"
       [collapsed]="false"
       legend="Filtri"
-      styleClass="rounded-xl! p-3! shadow-sm! border! border-gray-100! bg-white! overflow-hidden!"
+      styleClass="rounded-xl! p-2! shadow-sm! border! border-gray-100! bg-white!"
     >
       <div class="flex flex-col gap-2">
         <div class="flex justify-center">
@@ -120,18 +120,24 @@ import {BookSearchFilter} from '../../../../../shared/models/book-search-filter'
 })
 export class SearchFormComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private locationService: LocationService = inject(LocationService);
 
-  protected locationService: LocationService = inject(LocationService);
+  private isLocationAvailable = computed(() => {
+    return this.locationService.isLocationEnabled()
+  });
+  private userCoordinates = computed(() => {
+    return this.locationService.userCoordinates();
+  })
 
   protected searchForm!: FormGroup;
   protected searchSelected: string = 'text';
+
   protected readonly stateOptions = computed(() => [
     { label: 'Testuale', value: 'text', disabled: false },
-    { label: 'Spaziale', value: 'geom', disabled: !this.locationService.isLocationEnabled() }
+    { label: 'Spaziale', value: 'geom', disabled: !this.isLocationAvailable() }
   ]);
 
-  @Output() searchFilter = new EventEmitter<BookSearchFilter>();
-
+  public searchFilter = output<BookFilter>();
   ngOnInit(): void {
     // Inizializzo il fromGroup
     this.searchForm = this.fb.group({
@@ -141,16 +147,16 @@ export class SearchFormComponent implements OnInit {
       isbn: new FormControl({ value: '', disabled: false }, { validators: [] }),
       publisher: new FormControl({ value: '', disabled: false }, { validators: [] }),
       publishedDate: new FormControl({ value: null, disabled: false }, { validators: [] }),
-      radius: new FormControl({ value: 10, disabled: !this.locationService.isLocationEnabled() }, { validators: [] })
+      radius: new FormControl({ value: null, disabled: !this.isLocationAvailable() }, { validators: [] })
     });
   }
 
   onSearch() {
     const rawValue = this.searchForm.value;
-    const filters: BookSearchFilter = {...rawValue};
+    const filters: BookFilter = {...rawValue};
 
-    if(this.searchSelected == 'geom') {
-      const coords = this.locationService.userCoordinates();
+    if(this.isLocationAvailable()) {
+      const coords = this.userCoordinates();
       if(coords) {
         filters.location = {...coords};
       }
@@ -161,8 +167,6 @@ export class SearchFormComponent implements OnInit {
   }
 
   onReset() {
-    this.searchForm.reset({
-      radius: 10
-    });
+    this.searchForm.reset();
   }
 }

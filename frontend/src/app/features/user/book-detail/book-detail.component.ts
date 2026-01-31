@@ -1,9 +1,9 @@
-import {Component, inject} from '@angular/core';
-import {BookService} from '../book-management/services/book-service';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-book-detail',
   imports: [],
+  providers: [],
   template: `
     <p>
       book-detail works!
@@ -12,5 +12,5 @@ import {BookService} from '../book-management/services/book-service';
   styles: ``,
 })
 export class BookDetailComponent {
-  private bookService: BookService = inject(BookService);
+
 }

@@ -1,6 +1,6 @@
 import {Coordinate} from './coordinate';
 
-export interface BookSearchFilter {
+export interface BookFilter {
   title?: string;
   author?: string;
   genre?: string;
