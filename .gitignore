@@ -30,3 +30,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/docker/locale/database/data/
+/docker/locale/geoserver/data_dir/
+
