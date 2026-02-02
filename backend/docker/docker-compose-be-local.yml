@@ -9,6 +9,7 @@ services:
       - environments/.env.local
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
+      SHARED_DATA_LOGS: /temp/logs
     ports:
       - "${GATEWAY_PORT}:8083"
     volumes:

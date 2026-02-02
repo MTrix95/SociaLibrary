@@ -23,11 +23,11 @@ export class RoleGuard implements CanActivate {
     private authService = inject(AuthService);
     private router = inject(Router);
 
-    canActivate(): boolean {
+    async canActivate(): Promise<boolean> {
         // TODO: Aggiungere la gestione dei ruoli
 
         // Nel caso il cui l'utente non ha il ruolo neccessario viene reindirizzato alla home
-        this.router.navigate(['/home']).then(r => {});
+        await this.router.navigate(['/home']);
         return false;
     }
 }

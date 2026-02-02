@@ -13,25 +13,7 @@ import {Book} from '../../../shared/models/book';
     BookListComponent
   ],
   providers: [ DialogService ],
-  template: `
-    <div class="flex flex-col h-full bg-white">
-      <!-- Contenuto -->
-      <div class="flex-1 flex flex-col gap-6 h-full">
-        <!-- Sezione Ricerca -->
-        <div class="flex flex-col gap-1.5 w-full">
-          <app-search-form (searchFilter)="onSearchHandler($event)"></app-search-form>
-        </div>
-
-        <!-- Sezione Lista/Tabella -->
-        <div class="flex h-full flex-col gap-1.5 w-full mb-4 min-h-0">
-          <label class="text-gray-400 text-[13px] uppercase font-bold ml-1 tracking-widest">Risultati</label>
-          <div class="rounded-xl flex-1 border border-gray-100 overflow-hidden shadow-sm">
-            <app-book-list [booksList]="books()"></app-book-list>
-          </div>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './book-search.component.html',
   styles: ``,
 })
 export class BookSearchComponent {
@@ -141,6 +123,7 @@ export class BookSearchComponent {
         location: { lat: 39.2238, lon: 9.1217 } // Cagliari
       }
     ]);
+
     this.bookSearchService.searchBooks(filters).subscribe((result) => {
       //this.books.set(result)
     });
