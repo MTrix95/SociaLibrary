@@ -4,3 +4,20 @@ logging:
     org.springframework.security: ${LOG_LEVEL:DEBUG}
     org.springframework.oauth2: ${LOG_LEVEL:DEBUG}
     org.springframework.web: ${LOG_LEVEL:DEBUG}
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/administrator
+    username: administrator
+    password: administrator
+    driver-class-name: org.postgresql.Driver
+
+    jpa:
+      hibernate:
+        ddl-auto: validate
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+
+

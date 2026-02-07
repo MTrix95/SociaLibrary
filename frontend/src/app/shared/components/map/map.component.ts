@@ -53,7 +53,7 @@ export class MapComponent implements AfterViewInit {
         new TileLayer({
           source: new OSM()
         }),
-        this.createLibraryLayer()
+        //this.createLibraryLayer()
       ],
       controls: defaultControls().extend([scaleLine]),
       target: this.mapContainer.nativeElement

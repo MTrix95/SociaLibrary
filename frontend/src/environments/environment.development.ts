@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
   // KEYCLOAK
-  KC_URL_SERVER: 'http://localhost:8080/realms/socialibrary/',
-  KC_URL_AUTH: 'http://localhost:8080/realms/socialibrary/protocol/openid-connect/auth',
+  KC_URL_SERVER: window.location.origin + '/realms/socialibrary',
+  KC_URL_AUTH: window.location.origin + '/realms/socialibrary/protocol/openid-connect/auth',
   KC_CLIENT_ID: 'social-library-client',
   KC_RESPONSE_TYPE: 'code',
   KC_SCOPE: 'openid profile email',

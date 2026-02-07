@@ -3,25 +3,28 @@ services:
   gateway:
     build:
       context: ..
-      dockerfile: GatewayService/Dockerfile-local
-    working_dir: /workspace/GatewayService
+      dockerfile: GatewayService/Dockerfile
+    restart: on-failure
     env_file:
       - environments/.env.local
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
       SHARED_DATA_LOGS: /temp/logs
     ports:
-      - "5005:5005"
       - "${GATEWAY_PORT}:8083"
     volumes:
-      - ../:/workspace:rw
-      - m2:/root/.m2
       - ${SHARED_DATA_LOGS}:/temp/logs:rw
     depends_on:
       db:
         condition: service_healthy
       keycloak:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8083/social-library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     networks:
       - net
 
@@ -29,7 +32,7 @@ services:
 #    build:
 #      context: ..
 #      dockerfile: AdministratorService/Dockerfile
-#    working_dir: /workspace/GatewayService
+#    restart: on-failure
 #    env_file:
 #      - ./environments/.env.local
 #    environment:
@@ -37,17 +40,19 @@ services:
 #      ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB}
 #      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
 #      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
-#      SHARED_DATA_LOGS: /temp/logs
 #    ports:
-#      - "5006:5005" # debug port
 #      - "${ADMINISTRATOR_PORT}:8084"
 #    volumes:
-#      - ../:/workspace:rw
-#      - m2:/root/.m2
 #      - ${SHARED_DATA_LOGS}:/temp/logs:rw
 #    depends_on:
 #      gateway:
 #        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8084/api/administrator/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 20s
 #    networks:
 #      - net
 #
@@ -55,28 +60,28 @@ services:
 #    build:
 #      context: ..
 #      dockerfile: LibraryService/Dockerfile
-#    working_dir: /workspace/LibraryService
+#    restart: on-failure
 #    env_file:
 #      - ./environments/.env.local
 #    environment:
-#      DB_DRIVER_CLASS_NAME:${DB_DRIVER_CLASS_NAME}
-#      LIBRARY_HOST_DB:${LIBRARY_HOST_DB}
-#      LIBRARY_USER_DB:${LIBRARY_USER_DB}
-#      LIBRARY_PASSWORD_DB:${LIBRARY_PASSWORD_DB}
-#      SHARED_DATA_THUMBNAILS:upload/files/thumbnails
-#      SHARED_DATA_LOGS:/temp/logs
+#      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
+#      LIBRARY_HOST_DB: ${LIBRARY_HOST_DB}
+#      LIBRARY_USER_DB: ${LIBRARY_USER_DB}
+#      LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
+#      SHARED_DATA_THUMBNAILS: ${SHARED_DATA_THUMBNAILS}
 #    ports:
-#      - "5007:5005"
 #      - "${LIBRARY_PORT}:8085"
 #    volumes:
-#      - ../:/workspace:rw
-#      - m2:/root/.m2
 #      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
 #      - ${SHARED_DATA_LOGS}:/temp/logs:rw
 #    depends_on:
 #      gateway:
 #        condition: service_healthy
-#      geoserver:
-#        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl --fail --silent http://localhost:8085/api/library/actuator/health | grep '\"status\":\"UP\"' || exit 1" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 20s
 #    networks:
 #      - net

@@ -1,5 +1,6 @@
 # MICROSERVIZI FE
 services:
+
   frontend:
     container_name: web
     restart: on-failure
@@ -7,13 +8,33 @@ services:
       - environments/.env.local
     build:
       context: ..
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ../:/app:rw
+      - node_modules:/app/node_modules
+    networks:
+      - net
+
+  nginx:
+    image: nginx:stable-alpine
+    restart: on-failure
+    env_file:
+      - environments/.env.local
     ports:
       - "${NGINX_PORT}:80"
     volumes:
       - ${NGINX_CONF}:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      gateway:
-        condition: service_healthy
+      - frontend
     networks:
       - net
+
+volumes:
+  node_modules:
+
+networks:
+  net:
+    external: true
+    name: net

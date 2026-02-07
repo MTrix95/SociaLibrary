@@ -1,5 +1,6 @@
 include:
   - ../backend/docker/docker-compose-be-local.yml
+  #- ../frontend/docker/docker-compose-fe-local.yml
 
 services:
   db:
@@ -89,5 +90,4 @@ volumes:
 
 networks:
   net:
-    external: true
-    name: net
+    driver: bridge

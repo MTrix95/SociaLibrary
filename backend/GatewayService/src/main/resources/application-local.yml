@@ -1,32 +1,33 @@
 logging:
   level:
     org.springframework: info
-    org.springframework.security: DEBUG
-    org.springframework.oauth2: DEBUG
+    org.springframework.security: ${LOG_LEVEL}
+    org.springframework.oauth2: ${LOG_LEVEL}
 
 spring:
+  # Security
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/socialibrary
-
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+  # Gateway
   cloud:
     gateway:
       server:
         webmvc:
           routes:
             - id: administrator-service
-              uri: http://localhost:8084/api/administrator
+              uri: ${ADMINISTRATOR_URL}
               predicates:
                 - Path=/api/administrator/**
               filters:
                 - StripPrefix=1
-                - TokenRelay
+                - TokenRelay # Trasmetto il token al servizio administrator
             - id: library-service
-              uri: http://localhost:8085/api/library
+              uri: ${LIBRARY_URL}
               predicates:
                 - Path=/api/library/**
               filters:
                 - StripPrefix=1
-                - TokenRelay
+                - TokenRelay # Trasmetto il token al servizio library

@@ -7,7 +7,7 @@
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
-  "accessTokenLifespan": 300,
+  "accessTokenLifespan": 1800,
   "accessTokenLifespanForImplicitFlow": 900,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,
@@ -29,9 +29,9 @@
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
   "sslRequired": "external",
-  "registrationAllowed": false,
-  "registrationEmailAsUsername": false,
-  "rememberMe": false,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "rememberMe": true,
   "verifyEmail": false,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
@@ -68,6 +68,23 @@
         "attributes": {}
       },
       {
+        "id": "664faf26-481b-455f-9051-d80a23a956c8",
+        "name": "User",
+        "description": "Ruolo utente per il progetto Social Library",
+        "composite": true,
+        "composites": {
+          "client": {
+            "library-client": [
+              "book:read",
+              "book:manage"
+            ]
+          }
+        },
+        "clientRole": false,
+        "containerId": "31864dc8-e840-460e-962b-7f33a5c969aa",
+        "attributes": {}
+      },
+      {
         "id": "76404856-cf46-48f3-af20-96ebda9078e6",
         "name": "default-roles-socialibrary",
         "description": "${role_default-roles}",
@@ -81,6 +98,27 @@
             "account": [
               "manage-account",
               "view-profile"
+            ]
+          }
+        },
+        "clientRole": false,
+        "containerId": "31864dc8-e840-460e-962b-7f33a5c969aa",
+        "attributes": {}
+      },
+      {
+        "id": "93812229-a5c7-4f38-a692-0695e1778df9",
+        "name": "Admin",
+        "description": "Ruolo amministrativo per il progetto Social Library",
+        "composite": true,
+        "composites": {
+          "client": {
+            "library-client": [
+              "book:read",
+              "book:manage"
+            ],
+            "administrator-client": [
+              "user:manage",
+              "user:read"
             ]
           }
         },
@@ -299,6 +337,46 @@
           "composite": false,
           "clientRole": true,
           "containerId": "78653e93-0edd-4c08-9d9c-99af4f5cd5c9",
+          "attributes": {}
+        }
+      ],
+      "library-client": [
+        {
+          "id": "7599f067-15ef-4da0-972e-f04b3ceb8d41",
+          "name": "book:read",
+          "description": "Ruolo che permette la visualizzazione dei libri",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "476635b9-db36-419a-a726-da3ef28fd2cb",
+          "attributes": {}
+        },
+        {
+          "id": "4a521dc9-45cc-493f-8842-6577d044cdd3",
+          "name": "book:manage",
+          "description": "Ruolo per modificare i libri della propria libreria",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "476635b9-db36-419a-a726-da3ef28fd2cb",
+          "attributes": {}
+        }
+      ],
+      "administrator-client": [
+        {
+          "id": "6a9f9e3d-e513-4908-ba87-27d8a7385a6d",
+          "name": "user:manage",
+          "description": "Ruolo amministrativo per modificare gli utenti",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "329325c6-a07d-483e-af04-57a1269a12b8",
+          "attributes": {}
+        },
+        {
+          "id": "87466fdf-697e-43a3-970b-1401d85447c1",
+          "name": "user:read",
+          "description": "Ruolo amministrativo per la lettura degli utenti",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "329325c6-a07d-483e-af04-57a1269a12b8",
           "attributes": {}
         }
       ],
@@ -630,6 +708,60 @@
       ]
     },
     {
+      "id": "329325c6-a07d-483e-af04-57a1269a12b8",
+      "clientId": "administrator-client",
+      "name": "Administrator Client",
+      "description": "Administrator Client per il progetto Social Library",
+      "rootUrl": "",
+      "adminUrl": "",
+      "baseUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [
+        "/*"
+      ],
+      "webOrigins": [
+        "/*"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "1770475708",
+        "backchannel.logout.session.required": "true",
+        "oauth2.jwt.authorization.grant.enabled": "false",
+        "standard.token.exchange.enabled": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "dpop.bound.access.tokens": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "acr",
+        "roles",
+        "profile",
+        "basic",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "organization"
+      ]
+    },
+    {
       "id": "82d0281d-05c4-4b63-9189-7ca358fdba62",
       "clientId": "broker",
       "name": "${client_broker}",
@@ -670,6 +802,59 @@
         "offline_access",
         "organization",
         "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "476635b9-db36-419a-a726-da3ef28fd2cb",
+      "clientId": "library-client",
+      "name": "Library Client",
+      "description": "Client per la libreria del progetto Social Library",
+      "rootUrl": "http://localhost:8083/api/library",
+      "adminUrl": "http://localhost:8083/api/library",
+      "baseUrl": "",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [
+        "http://localhost:8083/api/library/*"
+      ],
+      "webOrigins": [
+        "http://localhost:8083"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "1770476594",
+        "backchannel.logout.session.required": "true",
+        "standard.token.exchange.enabled": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "dpop.bound.access.tokens": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "acr",
+        "roles",
+        "profile",
+        "basic"
+      ],
+      "optionalClientScopes": [
+        "organization",
+        "email"
       ]
     },
     {
@@ -829,20 +1014,13 @@
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
-        "web-origins",
         "acr",
         "roles",
         "profile",
         "basic",
         "email"
       ],
-      "optionalClientScopes": [
-        "address",
-        "phone",
-        "offline_access",
-        "organization",
-        "microprofile-jwt"
-      ]
+      "optionalClientScopes": []
     }
   ],
   "clientScopes": [
@@ -924,38 +1102,15 @@
           "protocolMapper": "oidc-usermodel-client-role-mapper",
           "consentRequired": false,
           "config": {
+            "introspection.token.claim": "true",
+            "multivalued": "true",
+            "userinfo.token.claim": "false",
             "user.attribute": "foo",
-            "introspection.token.claim": "true",
+            "id.token.claim": "false",
+            "lightweight.claim": "false",
             "access.token.claim": "true",
-            "claim.name": "resource_access.${client_id}.roles",
-            "jsonType.label": "String",
-            "multivalued": "true"
-          }
-        },
-        {
-          "id": "44e56ebf-96ba-4332-886e-b891ba3a08b2",
-          "name": "audience resolve",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-audience-resolve-mapper",
-          "consentRequired": false,
-          "config": {
-            "introspection.token.claim": "true",
-            "access.token.claim": "true"
-          }
-        },
-        {
-          "id": "c25325de-010d-4bc7-bf0e-1ba5bad48ec8",
-          "name": "realm roles",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-realm-role-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.attribute": "foo",
-            "introspection.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "realm_access.roles",
-            "jsonType.label": "String",
-            "multivalued": "true"
+            "claim.name": "roles",
+            "jsonType.label": "String"
           }
         }
       ]
@@ -1543,11 +1698,7 @@
     "basic"
   ],
   "defaultOptionalClientScopes": [
-    "offline_access",
-    "address",
-    "phone",
-    "microprofile-jwt",
-    "organization"
+    "address"
   ],
   "browserSecurityHeaders": {
     "contentSecurityPolicyReportOnly": "",
@@ -1578,14 +1729,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "oidc-usermodel-property-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
-            "saml-user-property-mapper",
+            "saml-user-attribute-mapper",
             "saml-role-list-mapper",
-            "oidc-full-name-mapper",
-            "oidc-usermodel-attribute-mapper",
             "oidc-address-mapper",
-            "saml-user-attribute-mapper"
+            "saml-user-property-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "oidc-usermodel-attribute-mapper",
+            "oidc-full-name-mapper",
+            "oidc-usermodel-property-mapper"
           ]
         }
       },
@@ -1652,13 +1803,13 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "saml-user-attribute-mapper",
-            "oidc-address-mapper",
             "oidc-sha256-pairwise-sub-mapper",
-            "oidc-usermodel-attribute-mapper",
             "saml-role-list-mapper",
-            "saml-user-property-mapper",
+            "oidc-usermodel-attribute-mapper",
+            "oidc-address-mapper",
             "oidc-full-name-mapper",
+            "saml-user-attribute-mapper",
+            "saml-user-property-mapper",
             "oidc-usermodel-property-mapper"
           ]
         }
@@ -1729,7 +1880,11 @@
       }
     ]
   },
-  "internationalizationEnabled": false,
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "it"
+  ],
+  "defaultLocale": "it",
   "authenticationFlows": [
     {
       "id": "7b8eaf58-c5ea-42e1-b1c1-4e8caf4f6e46",
@@ -2557,7 +2712,10 @@
     "clientOfflineSessionMaxLifespan": "0",
     "oauth2DevicePollingInterval": "5",
     "clientSessionIdleTimeout": "0",
+    "actionTokenGeneratedByUserLifespan.verify-email": "",
+    "actionTokenGeneratedByUserLifespan.idp-verify-account-via-email": "",
     "clientOfflineSessionIdleTimeout": "0",
+    "actionTokenGeneratedByUserLifespan.execute-actions": "",
     "cibaInterval": "5",
     "realmReusableOtpCode": "false",
     "cibaExpiresIn": "120",
@@ -2566,9 +2724,11 @@
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
     "frontendUrl": "",
-    "acr.loa.map": "{}"
+    "acr.loa.map": "{}",
+    "shortVerificationUri": "",
+    "actionTokenGeneratedByUserLifespan.reset-credentials": ""
   },
-  "keycloakVersion": "26.4.4",
+  "keycloakVersion": "26.5.2",
   "userManagedAccessAllowed": false,
   "organizationsEnabled": false,
   "verifiableCredentialsEnabled": false,
