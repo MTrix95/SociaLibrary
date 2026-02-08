@@ -2,9 +2,8 @@ spring:
   application:
     name: GatewayService
   profiles:
-    default: local
-    active: ${SPRING_PROFILES_ACTIVE:}
+    active: ${SPRING_PROFILES_ACTIVE}
 server:
-  port: 8083
+  port: ${GATEWAY_PORT}
   servlet:
     context-path: /social-library

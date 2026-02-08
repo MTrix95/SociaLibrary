@@ -29,7 +29,8 @@ import {LocationService} from './services/location.service';
   standalone: true
 })
 export class MapComponent implements AfterViewInit {
-  @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('mapContainer')
+  private mapContainer!: ElementRef<HTMLDivElement>;
 
   private map!: Map;
   private locationService: LocationService = inject(LocationService);
@@ -53,7 +54,7 @@ export class MapComponent implements AfterViewInit {
         new TileLayer({
           source: new OSM()
         }),
-        //this.createLibraryLayer()
+        this.createLibraryLayer()
       ],
       controls: defaultControls().extend([scaleLine]),
       target: this.mapContainer.nativeElement
@@ -77,14 +78,15 @@ export class MapComponent implements AfterViewInit {
   private createLibraryLayer(): TileLayer<TileWMS> {
     return new TileLayer({
       source: new TileWMS({
-        // In locale punterà al container geoserver tramite il proxy
-        url: '/geoserver/wms',
+        url: '/geo/ows',
         params: {
-          'LAYERS': 'socialibrary:books_locations', // Il nome del layer su GeoServer
-          'TILED': true,
-          'FORMAT': 'image/png',
-          'TRANSPARENT': true,
-          'VERSION': '1.1.1'
+          SERVICE: 'WMS',
+          VERSION: '1.1.1',
+          REQUEST: 'GetMap',
+          LAYERS: 'SociaLibrary:books',
+          TILED: true,
+          FORMAT: 'image/png',
+          TRANSPARENT: true
         },
         serverType: 'geoserver',
         transition: 0,

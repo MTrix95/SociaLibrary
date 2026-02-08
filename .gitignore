@@ -32,5 +32,7 @@ build/
 .vscode/
 
 /docker/locale/database/data/
-/docker/locale/geoserver/data_dir/
-
+/docker/locale/geoserver/data_dir/*
+!/docker/locale/geoserver/data_dir/workspaces
+!/docker/locale/geoserver/data_dir/styles
+!/docker/locale/geoserver/data_dir/global.xml

@@ -84,10 +84,6 @@ services:
     networks:
       - net
 
-
-volumes:
-  m2:
-
 networks:
   net:
     driver: bridge

@@ -23,11 +23,11 @@ spring:
                 - Path=/api/administrator/**
               filters:
                 - StripPrefix=1
-                - TokenRelay # Trasmetto il token al servizio administrator
+                - TokenRelay # Trasmetto il token al servizio downstream administrator
             - id: library-service
               uri: ${LIBRARY_URL}
               predicates:
                 - Path=/api/library/**
               filters:
                 - StripPrefix=1
-                - TokenRelay # Trasmetto il token al servizio library
+                - TokenRelay # Trasmetto il token al servizio downstream library

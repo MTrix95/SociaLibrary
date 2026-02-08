@@ -25,58 +25,54 @@ services:
     networks:
       - net
 
-#  administrator:
-#    build:
-#      context: ..
-#      dockerfile: AdministratorService/Dockerfile
-#    working_dir: /workspace/GatewayService
-#    env_file:
-#      - ./environments/.env.local
-#    environment:
-#      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
-#      ADMINISTRATOR_HOST_DB: ${ADMINISTRATOR_HOST_DB}
-#      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
-#      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
-#      SHARED_DATA_LOGS: /temp/logs
-#    ports:
-#      - "5006:5005" # debug port
-#      - "${ADMINISTRATOR_PORT}:8084"
-#    volumes:
-#      - ../:/workspace:rw
-#      - m2:/root/.m2
-#      - ${SHARED_DATA_LOGS}:/temp/logs:rw
-#    depends_on:
-#      gateway:
-#        condition: service_healthy
-#    networks:
-#      - net
-#
-#  library:
-#    build:
-#      context: ..
-#      dockerfile: LibraryService/Dockerfile
-#    working_dir: /workspace/LibraryService
-#    env_file:
-#      - ./environments/.env.local
-#    environment:
-#      DB_DRIVER_CLASS_NAME:${DB_DRIVER_CLASS_NAME}
-#      LIBRARY_HOST_DB:${LIBRARY_HOST_DB}
-#      LIBRARY_USER_DB:${LIBRARY_USER_DB}
-#      LIBRARY_PASSWORD_DB:${LIBRARY_PASSWORD_DB}
-#      SHARED_DATA_THUMBNAILS:upload/files/thumbnails
-#      SHARED_DATA_LOGS:/temp/logs
-#    ports:
-#      - "5007:5005"
-#      - "${LIBRARY_PORT}:8085"
-#    volumes:
-#      - ../:/workspace:rw
-#      - m2:/root/.m2
-#      - ${SHARED_DATA_THUMBNAILS}:/app/thumbnails:rw
-#      - ${SHARED_DATA_LOGS}:/temp/logs:rw
-#    depends_on:
-#      gateway:
-#        condition: service_healthy
-#      geoserver:
-#        condition: service_healthy
-#    networks:
-#      - net
+  administrator:
+    build:
+      context: ..
+      dockerfile: AdministratorService/Dockerfile-local
+    working_dir: /workspace/AdministratorService
+    env_file:
+      - ./environments/.env.local
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
+      ADMINISTRATOR_URL_DB: ${ADMINISTRATOR_URL_DB}
+      ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
+      ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
+      SHARED_DATA_LOGS: /temp/logs
+    ports:
+      - "5006:5005" # debug port
+      - "${ADMINISTRATOR_PORT}:8084"
+    volumes:
+      - ../:/workspace:rw
+      - m2:/root/.m2
+      - ${SHARED_DATA_LOGS}:/temp/logs:rw
+    depends_on:
+      - gateway
+    networks:
+      - net
+
+  library:
+    build:
+      context: ..
+      dockerfile: LibraryService/Dockerfile-local
+    working_dir: /workspace/LibraryService
+    env_file:
+      - ./environments/.env.local
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
+      LIBRARY_URL_DB: ${ADMINISTRATOR_URL_DB}
+      LIBRARY_USER_DB: ${ADMINISTRATOR_USER_DB}
+      LIBRARY_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
+      SHARED_DATA_LOGS: /temp/logs
+    ports:
+      - "5007:5005"
+      - "${LIBRARY_PORT}:8085"
+    volumes:
+      - ../:/workspace:rw
+      - m2:/root/.m2
+      - ${SHARED_DATA_THUMBNAILS}:/temp/files/thumbnails:rw
+      - ${SHARED_DATA_LOGS}:/temp/logs:rw
+    depends_on:
+      - gateway
+      - geoserver
+    networks:
+      - net

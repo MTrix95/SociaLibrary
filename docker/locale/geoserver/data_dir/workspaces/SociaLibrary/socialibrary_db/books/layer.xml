@@ -1,0 +1,22 @@
+<layer>
+  <name>books</name>
+  <id>LayerInfoImpl--27e709c7:19c3dbe5f97:-7fff</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--785275be:19c3d01147c:-8000</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl--785275be:19c3d01147c:-8000</id>
+    </style>
+  </styles>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--27e709c7:19c3dbe5f97:-8000</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2026-02-08 14:53:32.473 UTC</dateCreated>
+  <dateModified>2026-02-08 14:58:06.396 UTC</dateModified>
+</layer>
