@@ -5,3 +5,5 @@ spring:
     name: LibraryService
 server:
   port: 8085
+  servlet:
+    context-path: /api/library

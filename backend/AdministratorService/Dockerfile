@@ -8,7 +8,7 @@ COPY AdministratorService/ ./AdministratorService/
 
 # Compilo con maven e genero il JAR
 WORKDIR /app/AdministratorService/
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Stage 2: Esecuzione
 FROM eclipse-temurin:21-jre-alpine

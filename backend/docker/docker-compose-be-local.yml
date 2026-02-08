@@ -8,7 +8,7 @@ services:
     env_file:
       - environments/.env.local
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SHARED_DATA_LOGS: /temp/logs
     ports:
       - "5005:5005"
@@ -33,7 +33,7 @@ services:
     env_file:
       - ./environments/.env.local
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       ADMINISTRATOR_URL_DB: ${ADMINISTRATOR_URL_DB}
       ADMINISTRATOR_USER_DB: ${ADMINISTRATOR_USER_DB}
       ADMINISTRATOR_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
@@ -58,10 +58,10 @@ services:
     env_file:
       - ./environments/.env.local
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE_ACTIVE}
-      LIBRARY_URL_DB: ${ADMINISTRATOR_URL_DB}
-      LIBRARY_USER_DB: ${ADMINISTRATOR_USER_DB}
-      LIBRARY_PASSWORD_DB: ${ADMINISTRATOR_PASSWORD_DB}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      LIBRARY_URL_DB: ${LIBRARY_URL_DB}
+      LIBRARY_USER_DB: ${LIBRARY_USER_DB}
+      LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
       SHARED_DATA_LOGS: /temp/logs
     ports:
       - "5007:5005"

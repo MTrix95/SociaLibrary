@@ -22,8 +22,8 @@
         <thumbnailator.version>0.4.21</thumbnailator.version>
 
         <!-- SPRING -->
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <spring-dependecies.version>3.5.7</spring-dependecies.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
+        <spring-dependecies.version>4.0.0</spring-dependecies.version>
     </properties>
 
     <modules>

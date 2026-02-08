@@ -9,20 +9,16 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 -- 1) CREAZIONE DEI RUOLI
 CREATE ROLE library LOGIN PASSWORD 'library';
 CREATE ROLE administrator LOGIN PASSWORD 'administrator';
-CREATE ROLE geo LOGIN PASSWORD 'geo';
 
--- Creo gli schemi library, administrator, geo
+-- Creo gli schemi library, administrator
 CREATE SCHEMA library  AUTHORIZATION library;
 CREATE SCHEMA administrator AUTHORIZATION administrator;
-CREATE SCHEMA geo AUTHORIZATION geo;
 
 GRANT USAGE, CREATE ON SCHEMA library TO library;
 GRANT USAGE, CREATE ON SCHEMA administrator TO administrator;
-GRANT USAGE, CREATE ON SCHEMA geo TO geo;
 
 ALTER DEFAULT PRIVILEGES FOR ROLE library IN SCHEMA library
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO library;
 ALTER DEFAULT PRIVILEGES FOR ROLE administrator IN SCHEMA administrator
     GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO administrator;
-ALTER DEFAULT PRIVILEGES FOR ROLE geo IN SCHEMA geo
-    GRANT EXECUTE ON FUNCTIONS TO geo;
+

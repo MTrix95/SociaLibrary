@@ -1,6 +1,6 @@
 include:
-  - ../backend/docker/docker-compose-be-local.yml
-  #- ../frontend/docker/docker-compose-fe-local.yml
+  - ../backend/docker/docker-compose-be.yml
+  - ../frontend/docker/docker-compose-fe.yml
 
 services:
   db:
@@ -42,7 +42,7 @@ services:
       # METRICHE
       KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED}
       KC_METRICS_ENABLED: ${KC_METRICS_ENABLED}
-
+      # PROXY
       KC_HOSTNAME_URL: http://localhost:4200
       KC_HOSTNAME_STRICT: "false"
       KC_PROXY_HEADERS: xforwarded

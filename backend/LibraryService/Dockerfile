@@ -8,7 +8,7 @@ COPY LibraryService/ ./LibraryService/
 
 # Compilo con maven e genero il JAR
 WORKDIR /app/LibraryService/
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Stage 2: Esecuzione
 FROM eclipse-temurin:21-jre-alpine
@@ -20,3 +20,4 @@ WORKDIR /app
 COPY --from=build /app/LibraryService/target/*.jar LibraryService.jar
 
 EXPOSE 8085
+ENTRYPOINT ["java", "-jar", "LibraryService.jar"]

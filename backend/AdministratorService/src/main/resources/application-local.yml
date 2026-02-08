@@ -1,9 +1,9 @@
 logging:
   level:
     org.springframework: info
-    org.springframework.security: ${LOG_LEVEL}
-    org.springframework.oauth2: ${LOG_LEVEL}
-    org.springframework.web: ${LOG_LEVEL}
+    org.springframework.security: ${LOG_LEVEL:info}
+    org.springframework.oauth2: ${LOG_LEVEL:info}
+    org.springframework.web: ${LOG_LEVEL:info}
 
 
 
