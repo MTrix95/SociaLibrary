@@ -6,13 +6,11 @@ Questa repository contiene un’applicazione **full-stack** composta da:
 - **Identity Provider**: Keycloak
 - **GeoServer**
 - **Frontend**: Nginx (reverse proxy + static assets)
-
-Questa guida è pensata per avviare l’intero progetto **senza IDE**, usando **solo Docker**.
-
 ---
 
 ## Prerequisiti
 
 - **Docker Desktop**
 - **Docker Compose v2**
+
 
