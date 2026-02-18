@@ -1,10 +1,11 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {ApplicationConfig, provideBrowserGlobalErrorListeners} from '@angular/core';
+import {provideRouter} from '@angular/router';
 
-import { routes } from '../../app.routes';
+import {routes} from '../../app.routes';
 import {providePrimeNG} from 'primeng/config';
 import {DefaultOAuthInterceptor, provideOAuthClient} from 'angular-oauth2-oidc';
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi} from '@angular/common/http';
+import {MessageService} from 'primeng/api';
 import {errorInterceptor} from '../interceptors/error-interceptor';
 import Aura from '@primeuix/themes/aura';
 
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
+    MessageService,
     provideHttpClient(
       withInterceptors([errorInterceptor]),
       withInterceptorsFromDi()
@@ -24,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     },
     provideOAuthClient({
         resourceServer: {
-          allowedUrls: ['http://localhost:4200/api', '/api'],
+          allowedUrls: [window.location.origin + '/api', '/api'],
           sendAccessToken: true
         }
     }),

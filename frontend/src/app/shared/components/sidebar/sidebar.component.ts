@@ -1,4 +1,4 @@
-import {Component, inject, WritableSignal} from '@angular/core';
+import {Component, computed, inject, Signal, WritableSignal} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {DrawerModule} from 'primeng/drawer';
 import {MenuItem, MenuItemCommandEvent, PrimeIcons} from 'primeng/api';
@@ -9,7 +9,7 @@ import {UserProfileComponent} from '../user-profile/user-profile.component';
 import {BookManagementComponent} from '../../../features/user/book-management/book-management.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {BookSearchComponent} from '../../../features/user/book-search/book-search.component';
-import {FooterComponent} from '../dialog/components/footer/footer.component';
+import {DEFAULT_DIALOG_CONFIG} from './sidebar.constants';
 
 @Component({
   selector: 'app-sidebar',
@@ -35,7 +35,7 @@ import {FooterComponent} from '../dialog/components/footer/footer.component';
 
       <!-- Menu -->
       <div class="flex-1 overflow-y-auto py-4 px-3 space-y-4">
-        @for (item of menuItems; track item.label) {
+        @for (item of menuItems(); track item.label) {
           <div class="space-y-1">
             @if (item.visible) {
               <div [routerLink]="item.items ? null : item.routerLink"
@@ -74,13 +74,13 @@ import {FooterComponent} from '../dialog/components/footer/footer.component';
 
       <!-- Footer -->
       <footer class="p-4 border-t border-gray-800 bg-gray-900 shrink-0">
-        @if (isLoggedIn && userProfile()) {
+        @if (isLoggedIn()) {
           <div class="mb-4">
             <p class="hidden lg:block text-xs font-bold text-gray-500 uppercase mb-2">Utente</p>
             <button (click)="openInfo()"  class="w-full flex items-center justify-center lg:justify-start gap-3 p-2 rounded-lg text-left cursor-pointer">
               <div class="flex-1 min-w-0 hidden lg:block">
-                <p class="text-sm font-medium text-white truncate">{{ fullName || 'pippo' }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ email || 'pippo' }}</p>
+                <p class="text-sm font-medium text-white truncate">{{ fullName() }}</p>
+                <p class="text-xs text-gray-500 truncate">{{ email() }}</p>
               </div>
               <i class="pi pi-user lg:hidden text-xl text-gray-400"></i>
             </button>
@@ -109,76 +109,35 @@ export class SidebarComponent {
   private dialogService: DialogService = inject(DialogService);
 
   protected userProfile: WritableSignal<UserProfile | null> = this.authService.userProfile;
-
   protected isVisible = false;
 
+  /**
+   * Nome completo dell'utente con fallback
+   */
+  protected fullName: Signal<string> = computed(() => {
+    return this.userProfile()?.name || '';
+  });
 
-  protected logIn() {
-    this.authService.login();
-  }
+  /**
+   * Email dell'utente con fallback
+   */
+  protected email: Signal<string> = computed(() => {
+    return this.userProfile()?.email || '';
+  });
 
-  protected logOut() {
-    this.authService.logOut();
-  }
-
-  protected openInfo() {
-    this.isVisible = true;
-  }
-
-  protected openSearch() {
-    this.dialogService.open(BookSearchComponent, {
-      header: 'Ricerca',
-      data: {
-        isSaveEnabled: false,
-      },
-      width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
-      height: '90vh',     // Altezza quasi a tutto schermo
-      contentStyle: { 'padding': '0 24px', 'height': '100%' },
-      position: 'topright', // Verrà posizionato al centro della pagina
-      baseZIndex: 10000,
-      modal: false, // Evito che ci sia l'overlay dietro alla modale
-      maximizable: true,   // Permette all'utente di espandere la
-      resizable: false, // Non permette all'utente di ridimensionare la modale
-      closable: true,
-      templates: {
-        footer: FooterComponent
-      }
-    });
-  }
-
-  protected openManagementBooks() {
-      this.dialogService.open(BookManagementComponent, {
-        header: 'Gestione',
-        data: {
-          isSaveEnabled: false,
-        },
-        width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
-        height: '90vh',     // Altezza quasi a tutto schermo
-        position: 'topright', // Verrà posizionato al centro della pagina
-        contentStyle: { 'padding': '0 24px', 'height': '100%' },
-        baseZIndex: 10000,
-        modal: false, // Evito che ci sia l'overlay dietro alla modale
-        maximizable: true,   // Permette all'utente di espandere la
-        resizable: false, // Non permette all'utente di ridimensionare la modalr
-        templates: {
-          footer: FooterComponent
-        }
-      });
-  }
-
-  get fullName(): string {
-    return this.userProfile()?.name as string;
-  }
-
-  get email(): string {
-    return this.userProfile()?.email as string;
-  }
-
-  get isLoggedIn(): boolean {
+  /**
+   * Stato di autenticazione dell'utente
+   */
+  protected isLoggedIn: Signal<boolean> = computed(() => {
     return this.authService.isAuthenticated() as boolean;
-  }
+  });
 
-  get menuItems(): MenuItem[] {
+  /**
+   * Items del menu sidebar
+   */
+  protected menuItems: Signal<MenuItem[]> = computed(() => {
+    const loggedIn = this.isLoggedIn();
+
     return [
       {
         label: 'Home',
@@ -189,16 +148,20 @@ export class SidebarComponent {
       {
         label: 'Biblioteca',
         icon: PrimeIcons.BOOK,
-        visible: this.isLoggedIn,
+        visible: loggedIn,
         items: [
-          { label: 'Ricerca', icon: PrimeIcons.SEARCH,
+          {
+            label: 'Ricerca',
+            icon: PrimeIcons.SEARCH,
             command: (event: MenuItemCommandEvent) => {
               this.openSearch();
             }
           },
-          { label: 'Gestione', icon: PrimeIcons.FOLDER_PLUS,
+          {
+            label: 'Gestione',
+            icon: PrimeIcons.FOLDER_PLUS,
             command: (event: MenuItemCommandEvent) => {
-              this.openManagementBooks()
+              this.openManagementBooks();
             }
           }
         ]
@@ -206,11 +169,68 @@ export class SidebarComponent {
       {
         label: 'Dashboard',
         icon: PrimeIcons.CHART_PIE,
-        visible: this.isLoggedIn,
+        visible: loggedIn,
         items: [
-          { label: 'Statistiche', icon: PrimeIcons.CHART_LINE, routerLink: '/user/dashboard' },
+          {
+            label: 'Statistiche',
+            icon: PrimeIcons.CHART_LINE,
+            routerLink: '/user/dashboard'
+          },
         ]
       },
     ];
+  });
+
+  /**
+   * Apre il dialog di login
+   */
+  protected logIn(): void {
+    this.authService.login();
+  }
+
+  /**
+   * Esegue il logout dell'utente
+   */
+  protected logOut(): void {
+    this.authService.logOut();
+  }
+
+  /**
+   * Apre il dialog del profilo utente
+   */
+  protected openInfo(): void {
+    this.isVisible = true;
+  }
+
+  /**
+   * Apre il dialog di ricerca libri
+   */
+  protected openSearch(): void {
+    this.dialogService.open(BookSearchComponent, {
+      ...DEFAULT_DIALOG_CONFIG,
+      header: 'Ricerca',
+      data: {
+        footerConfig: {
+          showCloseButton: true,
+          showSaveButton: false
+        }
+      }
+    });
+  }
+
+  /**
+   * Apre il dialog di gestione libri
+   */
+  protected openManagementBooks(): void {
+    this.dialogService.open(BookManagementComponent, {
+      ...DEFAULT_DIALOG_CONFIG,
+      header: 'Gestione',
+      data: {
+        footerConfig: {
+          showCloseButton: true,
+          showSaveButton: false
+        }
+      }
+    });
   }
 }

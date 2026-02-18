@@ -62,4 +62,8 @@ html, body { height: 100%; margin: 0; padding: 0; }
   .p-dialog-footer {
     @apply pl-6 pr-6 pb-3.75;
   }
+
+  .library-button-primary {
+    @apply px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2;
+  }
 }

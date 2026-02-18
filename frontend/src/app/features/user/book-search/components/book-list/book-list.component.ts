@@ -1,4 +1,4 @@
-import {Component, inject, input } from '@angular/core';
+import {Component, inject, input} from '@angular/core';
 import {TableModule} from 'primeng/table';
 import {Tooltip} from 'primeng/tooltip';
 import {Book} from '../../../../../shared/models/book';
@@ -26,7 +26,13 @@ export class BookListComponent {
     this.dialogService.open(BookDetailComponent, {
       header: 'Dettaglio',
       data: {
-        isSaveEnabled: true,
+        // Passo l'oggetto selezionato alla modale
+        book,
+        readOnly: true,
+        footerConfig: {
+          showSaveButton: false,
+          showCloseButton: true,
+        }
       },
       width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
       height: '90vh',     // Altezza quasi a tutto schermo
