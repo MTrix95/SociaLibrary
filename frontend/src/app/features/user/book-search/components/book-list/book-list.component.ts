@@ -36,13 +36,19 @@ export class BookListComponent {
       },
       width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
       height: '90vh',     // Altezza quasi a tutto schermo
-      contentStyle: { 'padding': '0 1.5rem', 'height': '100%' },
+      contentStyle: {
+        'padding': '0 1.5rem',
+        'display': 'flex',
+        'flex-direction': 'column',
+        'height': '100%'
+      },
       position: 'topright', // Verrà posizionato al centro della pagina
       baseZIndex: 10000,
       modal: false, // Evito che ci sia l'overlay dietro alla modale
       maximizable: true,   // Permette all'utente di espandere la
       resizable: false, // Non permette all'utente di ridimensionare la modale
       closable: true,
+
       templates: {
         footer: FooterComponent
       }

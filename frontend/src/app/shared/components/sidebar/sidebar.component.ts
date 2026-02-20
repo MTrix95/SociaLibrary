@@ -50,26 +50,26 @@ import {DEFAULT_DIALOG_CONFIG} from './sidebar.constants';
                 <span class="hidden lg:inline">{{ item.label }}</span>
               </div>
 
-              @if (item.items) {
-                <!-- Sottomenu -->
-                <div class="hidden lg:flex ml-4 pl-4 border-l border-gray-700 flex-col cursor-pointer">
-                  @for (subItem of item.items; track subItem.label) {
-                    <div [routerLink]="subItem.routerLink"
-                         [routerLinkActiveOptions]="{exact: true}"
-                         routerLinkActive="bg-white text-black! font-semibold"
-                         (click)="subItem.command ? subItem.command({originalEvent: $event, item: subItem}) : null"
-                         class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
-                      <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
-                      <span class="block p-2 text-sm  transition-all">
+                @if (item.items) {
+                  <!-- Sottomenu -->
+                  <div class="hidden lg:flex ml-4 pl-4 border-l border-gray-700 flex-col cursor-pointer">
+                    @for (subItem of item.items; track subItem.label) {
+                      <div [routerLink]="subItem.routerLink"
+                           [routerLinkActiveOptions]="{exact: true}"
+                           routerLinkActive="bg-white text-black! font-semibold"
+                           (click)="subItem.command ? subItem.command({originalEvent: $event, item: subItem}) : null"
+                           class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
+                        <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
+                        <span class="block p-2 text-sm  transition-all">
                           {{ subItem.label }}
                       </span>
-                    </div>
-                  }
-                </div>
+                      </div>
+                    }
+                  </div>
+                }
               }
-            }
-          </div>
-        }
+            </div>
+          }
       </div>
 
       <!-- Footer -->
@@ -129,7 +129,7 @@ export class SidebarComponent {
    * Stato di autenticazione dell'utente
    */
   protected isLoggedIn: Signal<boolean> = computed(() => {
-    return this.authService.isAuthenticated() as boolean;
+    return this.authService.isLoggedIn()
   });
 
   /**

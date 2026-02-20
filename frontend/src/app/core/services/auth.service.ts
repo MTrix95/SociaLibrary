@@ -10,6 +10,7 @@ export class AuthService {
   private oauthService: OAuthService = inject(OAuthService);
 
   readonly userProfile = signal<UserProfile | null>(null);
+  readonly isLoggedIn = signal<boolean | false>(false)
 
   constructor() {
     this.oauthService.configure(authCodeFlowConfig);
@@ -27,16 +28,18 @@ export class AuthService {
     this.refreshProfile();
   }
 
-  isAuthenticated() {
-    return this.oauthService.hasValidAccessToken();
-  }
-
-  get getUserClaims() {
+  get getUserClaims(): UserProfile {
     return this.oauthService.getIdentityClaims() as UserProfile;
   }
 
+  get isAuthenticated(): boolean {
+    return this.oauthService.hasValidAccessToken();
+  }
+
   private refreshProfile() {
-    if(!this.isAuthenticated()) {
+    const loggedIn = this.isAuthenticated;
+    this.isLoggedIn.set(loggedIn);
+    if(!loggedIn) {
       this.userProfile.set(null);
     } else {
       const claims = this.getUserClaims ?? null;

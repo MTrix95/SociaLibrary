@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {ButtonModule} from 'primeng/button';
 import {Toast} from 'primeng/toast';
+import {SidebarComponent} from './shared/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import {Toast} from 'primeng/toast';
     RouterOutlet,
     ButtonModule,
     Toast,
+    SidebarComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

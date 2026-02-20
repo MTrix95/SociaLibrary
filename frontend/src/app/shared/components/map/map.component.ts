@@ -11,12 +11,11 @@ import {MessageService} from 'primeng/api';
 import {Toast} from 'primeng/toast';
 
 import {LocationService} from './services/location.service';
-import {LIBRARY_WMS_PARAMS, LIBRARY_WMS_URL, MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM,} from './map.constants';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-map',
   imports: [ReactiveFormsModule, Toast],
-  // MessageService è già fornito globalmente in app.config.ts
   template: `
     <div class="relative h-screen w-full">
       <p-toast position="top-center" />
@@ -56,7 +55,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private setupLocationWarning(): void {
     effect(() => {
-      debugger;
       if (!this.isLocationAvailable()) {
         this.messageService.add({
           severity: 'warn',
@@ -70,16 +68,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private buildMap(): Map {
-    const map = new Map({
+    return new Map({
       view: new View({
-        center: fromLonLat(MAP_DEFAULT_CENTER),
-        zoom: MAP_DEFAULT_ZOOM,
+        center: fromLonLat(environment.MAP_DEFAULT_CENTER),
+        zoom: environment.MAP_DEFAULT_ZOOM,
       }),
-      layers: [...this.createBaseLayers(), this.createLibraryLayer()],
+      layers: [...this.createBaseLayers(), this.createQuartieriLayer(), /*this.createLibraryLayer()*/],
       controls: this.createControls(),
       target: this.mapContainer.nativeElement,
     });
-    return map;
   }
 
   private createBaseLayers(): TileLayer<OSM>[] {
@@ -90,15 +87,32 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     ];
   }
 
+  private createQuartieriLayer(): TileLayer<TileWMS> {
+    return new TileLayer({
+      source: new TileWMS({
+        url: environment.MAP_LIBRARY_WMS_URL,
+        params: {
+          SERVICE: 'WMS',
+          VERSION: '1.1.1',
+          REQUEST: 'GetMap',
+          LAYERS: 'SociaLibrary:quartieri',
+          TILED: true,
+          FORMAT: 'image/png',
+          TRANSPARENT: true,
+        }
+      })
+    });
+  }
+
   /**
    * Layer WMS che interroga GeoServer (stile SLD e clustering gestiti lato server).
    */
   private createLibraryLayer(): TileLayer<TileWMS> {
     return new TileLayer({
       source: new TileWMS({
-        url: LIBRARY_WMS_URL,
+        url: environment.MAP_LIBRARY_WMS_URL,
         params: {
-          ...LIBRARY_WMS_PARAMS,
+          ...environment.MAP_LIBRARY_WMS_PARAMS,
         },
         serverType: 'geoserver',
         transition: 0,
