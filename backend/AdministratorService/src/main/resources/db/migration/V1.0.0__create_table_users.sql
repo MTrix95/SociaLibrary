@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS USERS
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    created_at timestamptz DEFAULT NOW() NOT NULL, -- Prendo il timestamp con il fuso orario
-    updated_at timestamptz, -- Aggiorna il timestamp quando viene effettuata una modifica
+    created_at TIMESTAMP DEFAULT NOW() NOT NULL, -- Prendo il timestamp
+    updated_at TIMESTAMP, -- Aggiorna il timestamp quando viene effettuata una modifica
 
     CONSTRAINT pk_user PRIMARY KEY (id)
 );

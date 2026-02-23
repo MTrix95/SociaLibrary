@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -22,4 +24,7 @@ public class Category {
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Book> books = new HashSet<>();
 }

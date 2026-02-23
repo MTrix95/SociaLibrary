@@ -7,6 +7,7 @@ import {SelectButton} from 'primeng/selectbutton';
 import {InputNumber} from 'primeng/inputnumber';
 import {LocationService} from '../../../../../shared/components/map/services/location.service';
 import {BookFilter} from '../../../../../shared/models/book-filter';
+import {fromLonLat} from 'ol/proj';
 
 @Component({
   selector: 'app-search-form',
@@ -61,9 +62,12 @@ export class SearchFormComponent implements OnInit {
     const filters: BookFilter = {...rawValue};
 
     if(this.isLocationAvailable()) {
-      const coords = this.userCoordinates();
-      if(coords) {
-        filters.location = {...coords};
+      const location = this.userCoordinates()?.coordinates;
+      if(location) {
+        const coordinates = fromLonLat(location, 'EPSG:4326');
+
+        filters.longitude = coordinates[0];
+        filters.latitude = coordinates[1];
       }
     }
 

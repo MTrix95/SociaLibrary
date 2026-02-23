@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * DTO for {@link it.socialibrary.administratorservice.enitity.User}
+ * DTO for {@link it.socialibrary.administratorservice.entity.User}
  */
 @Data
 @AllArgsConstructor

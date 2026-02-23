@@ -1,4 +1,4 @@
-import {Component, computed, inject, Signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, InputSignal, Signal, WritableSignal} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {DrawerModule} from 'primeng/drawer';
 import {MenuItem, MenuItemCommandEvent, PrimeIcons} from 'primeng/api';
@@ -54,16 +54,18 @@ import {DEFAULT_DIALOG_CONFIG} from './sidebar.constants';
                   <!-- Sottomenu -->
                   <div class="hidden lg:flex ml-4 pl-4 border-l border-gray-700 flex-col cursor-pointer">
                     @for (subItem of item.items; track subItem.label) {
-                      <div [routerLink]="subItem.routerLink"
-                           [routerLinkActiveOptions]="{exact: true}"
-                           routerLinkActive="bg-white text-black! font-semibold"
-                           (click)="subItem.command ? subItem.command({originalEvent: $event, item: subItem}) : null"
-                           class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
-                        <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
-                        <span class="block p-2 text-sm  transition-all">
-                          {{ subItem.label }}
-                      </span>
-                      </div>
+                      @if (subItem.visible) {
+                        <div [routerLink]="subItem.routerLink"
+                             [routerLinkActiveOptions]="{exact: true}"
+                             routerLinkActive="bg-white text-black! font-semibold"
+                             (click)="subItem.command ? subItem.command({originalEvent: $event, item: subItem}) : null"
+                             class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
+                          <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
+                          <span class="block p-2 text-sm  transition-all">
+                                {{ subItem.label }}
+                          </span>
+                        </div>
+                      }
                     }
                   </div>
                 }
@@ -99,7 +101,7 @@ import {DEFAULT_DIALOG_CONFIG} from './sidebar.constants';
         }
       </footer>
     </aside>
-    <app-user-profile [(visible)]="isVisible" [user]="userProfile()"></app-user-profile>
+    <app-user-profile [(visible)]="isVisible" [userId]="idUser()"></app-user-profile>
   `,
   styles: ``,
   standalone: true
@@ -118,11 +120,23 @@ export class SidebarComponent {
     return this.userProfile()?.name || '';
   });
 
+  protected idUser: Signal<string> = computed(() => {
+    return this.userProfile()?.sub || '';
+  })
+
   /**
    * Email dell'utente con fallback
    */
   protected email: Signal<string> = computed(() => {
     return this.userProfile()?.email || '';
+  });
+
+  protected isAdmin: Signal<boolean> = computed(() => {
+    return this.userProfile()?.roles?.includes('ADMIN') || false;
+  });
+
+  protected isUser: Signal<boolean> = computed(() => {
+    return this.userProfile()?.roles?.includes('USER') || false;
   });
 
   /**
@@ -153,6 +167,7 @@ export class SidebarComponent {
           {
             label: 'Ricerca',
             icon: PrimeIcons.SEARCH,
+            visible: this.isAdmin() || this.isUser(),
             command: (event: MenuItemCommandEvent) => {
               this.openSearch();
             }
@@ -160,6 +175,7 @@ export class SidebarComponent {
           {
             label: 'Gestione',
             icon: PrimeIcons.FOLDER_PLUS,
+            visible: this.isAdmin() || this.isUser(),
             command: (event: MenuItemCommandEvent) => {
               this.openManagementBooks();
             }
@@ -172,8 +188,15 @@ export class SidebarComponent {
         visible: loggedIn,
         items: [
           {
+            label: 'Statistiche amministratore',
+            visible: this.isAdmin(),
+            icon: PrimeIcons.CHART_LINE,
+            routerLink: '/admin/dashboard'
+          },
+          {
             label: 'Statistiche',
             icon: PrimeIcons.CHART_LINE,
+            visible: this.isUser(),
             routerLink: '/user/dashboard'
           },
         ]

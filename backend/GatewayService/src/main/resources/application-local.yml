@@ -11,6 +11,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI}
   # Gateway
   cloud:
     gateway:
@@ -20,14 +21,16 @@ spring:
             - id: administrator-service
               uri: ${ADMINISTRATOR_URL}
               predicates:
-                - Path=/api/administrator/**
+                - Path=/administrator/**
               filters:
                 - StripPrefix=1
+                - PrefixPath=/api/
                 - TokenRelay # Trasmetto il token al servizio downstream administrator
             - id: library-service
               uri: ${LIBRARY_URL}
               predicates:
-                - Path=/api/library/**
+                - Path=/library/**
               filters:
                 - StripPrefix=1
+                - PrefixPath=/api/
                 - TokenRelay # Trasmetto il token al servizio downstream library

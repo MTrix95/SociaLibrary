@@ -14,13 +14,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class) // Enable auditing
-@Table(name = "books")
+@Table(name = "books", schema = "library")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -56,6 +58,14 @@ public class Book {
     @JdbcTypeCode(SqlTypes.GEOMETRY)
     @Column(name = "location", columnDefinition = "geometry(Point,4326)")
     private Point location;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "book_categories",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

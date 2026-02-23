@@ -1,4 +1,4 @@
-import {Coordinate} from './coordinate';
+import {Location} from './location';
 
 export interface BookFilter {
   title?: string;
@@ -8,5 +8,6 @@ export interface BookFilter {
   publisher?: string;
   publishedDate?: Date;
   radius?: number;
-  location?: Coordinate;
+  latitude?: number;
+  longitude?: number;
 }

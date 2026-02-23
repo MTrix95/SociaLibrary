@@ -1,5 +1,5 @@
-import {Component, inject, input} from '@angular/core';
-import {TableModule} from 'primeng/table';
+import {Component, inject, Input, input, output} from '@angular/core';
+import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 import {Tooltip} from 'primeng/tooltip';
 import {Book} from '../../../../../shared/models/book';
 import {DatePipe} from '@angular/common';
@@ -20,7 +20,17 @@ import {FooterComponent} from '../../../../../shared/components/dialog/component
 })
 export class BookListComponent {
   private dialogService: DialogService = inject(DialogService);
-  public booksList = input.required<Book[]>();
+
+  totalRecords = input.required<number>();
+  loading = input<boolean>(false);
+  booksList = input.required<Book[]>();
+  first = input.required<number>();
+
+  public onLazyLoad = output<TableLazyLoadEvent>();
+
+  public handleLazyLoad(event: TableLazyLoadEvent) {
+    this.onLazyLoad.emit(event);
+  }
 
   protected onOpenDetail(book: Book) {
     this.dialogService.open(BookDetailComponent, {

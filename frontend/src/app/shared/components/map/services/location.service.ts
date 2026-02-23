@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy, signal} from '@angular/core';
-import {Coordinate} from '../../../models/coordinate';
+import {Location} from '../../../models/location';
 import {Feature, Geolocation} from 'ol';
 import Map from 'ol/Map';
 import {Point} from 'ol/geom';
@@ -14,7 +14,7 @@ import {environment} from '../../../../../environments/environment';
 })
 export class LocationService implements OnDestroy {
   readonly isLocationEnabled = signal<boolean>(false);
-  readonly userCoordinates = signal<Coordinate | null>(null);
+  readonly userCoordinates = signal<Location | null>(null);
 
   private geolocation?: Geolocation;
   private positionLayer?: VectorLayer<VectorSource>;
@@ -149,9 +149,9 @@ export class LocationService implements OnDestroy {
 
     const coordinates = this.geolocation.getPosition();
     if (coordinates) {
-      const coordinate: Coordinate = {
-        lon: coordinates[0],
-        lat: coordinates[1],
+      const coordinate: Location = {
+        type: 'Point',
+        coordinates: [coordinates[0], coordinates[1]]
       };
 
       this.updateLocationStatus(true, coordinate);
@@ -183,7 +183,7 @@ export class LocationService implements OnDestroy {
    */
   private updateLocationStatus(
     enabled: boolean,
-    coordinates: Coordinate | null
+    coordinates: Location | null
   ): void {
     this.isLocationEnabled.set(enabled);
     if (coordinates) {

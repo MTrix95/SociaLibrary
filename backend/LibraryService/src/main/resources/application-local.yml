@@ -14,6 +14,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI}
   flyway:
     default-schema: library
     driver-class-name: org.postgresql.Driver
@@ -35,7 +36,6 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect #Dialetto per PostGIS
         format_sql: true
 
 

@@ -23,27 +23,20 @@ import java.util.UUID;
 public class BookDto implements Serializable {
 
     private UUID id;
-
     @NotNull(message = "Il campo titolo è obbligatorio")
     @Size(message = "Hai superato il limite per il campo titolo", min = 1, max = 255)
     private String title;
-
     @NotNull(message = "Il campo autore è obbligatorio")
     @Size(message = "Hai superato il limite per il campo autore", min = 1, max = 255)
     private String author;
-
     @NotNull(message = "Il campo ISBN è obbligatorio")
-    private BigDecimal isbn;
-
+    private String isbn;
     @Size(max = 255)
     private String description;
-
     private LocalDate datePublished;
-
     @Size(max = 255)
     private String publisher;
-
-    private Point location;
-
     private UUID userId;
+    private Double latitude;
+    private Double longitude;
 }

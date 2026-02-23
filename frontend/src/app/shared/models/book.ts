@@ -1,4 +1,4 @@
-import {Coordinate} from './coordinate';
+import {Location} from './location';
 
 export interface Book {
   id: string;
@@ -8,5 +8,6 @@ export interface Book {
   isbn: string;
   publisher: string;
   publishedDate: Date;
-  location?: Coordinate;
+  lat: number;
+  lon: number;
 }

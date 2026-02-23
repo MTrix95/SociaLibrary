@@ -18,8 +18,9 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ADMIN'] },
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
+      { path: 'dashboard', component: StatsComponent }
     ]
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
