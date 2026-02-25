@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Point;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -39,4 +40,6 @@ public class BookDto implements Serializable {
     private UUID userId;
     private Double latitude;
     private Double longitude;
+
+    private List<BookImageDto> images;
 }

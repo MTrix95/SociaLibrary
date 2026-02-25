@@ -3,6 +3,7 @@ package it.socialibrary.libraryservice.repository.specifications;
 import it.socialibrary.libraryservice.entity.Book;
 import it.socialibrary.libraryservice.entity.Category;
 import it.socialibrary.libraryservice.web.dto.FiltersBookDto;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.experimental.UtilityClass;
@@ -55,23 +56,6 @@ public class BookSpecification {
             // Editore
             if (StringUtils.hasText(filters.getPublisher()))
                 predicates.add(builder.like(builder.lower(from.get("publisher")), "%" + filters.getPublisher().toLowerCase() + "%"));
-
-            if(filters.getLatitude() != null && filters.getLongitude() != null && filters.getRadius() != null) {
-                GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
-                Point searchPoint = geometryFactory.createPoint(new Coordinate(filters.getLongitude(), filters.getLatitude()));
-
-                int radiusInMeters = filters.getRadius() * 1000;
-
-                // Creo la funzione per sapere la distanza tra due punti
-                predicates.add(builder.isTrue(
-                        builder.function("ST_DWithin",
-                                Boolean.class,
-                                from.get("location"),
-                                builder.literal(searchPoint),
-                                builder.literal(radiusInMeters)
-                        )
-                ));
-            }
 
             return builder.and(predicates.toArray(new Predicate[0]));
         };

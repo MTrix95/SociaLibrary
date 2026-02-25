@@ -24,4 +24,8 @@ export class BookDetailComponent {
 
   protected book: Book | null = this._config.data?.book ?? null;
   protected readOnly: boolean = this._config.data?.readOnly ?? true;
+
+  constructor() {
+    console.log(this.book);
+  }
 }

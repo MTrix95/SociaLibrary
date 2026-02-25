@@ -30,7 +30,7 @@
       <td class="library-table-cell font-medium text-gray-900">{{ book.title }}</td>
       <td class="library-table-cell text-gray-600">{{ book.author }}</td>
       <td class="library-table-cell text-gray-600">{{ book.publisher }}</td>
-      <td class="library-table-cell text-gray-600 w-45">{{ book.publishedDate | date:'dd/MM/yyyy' }}</td>
+      <td class="library-table-cell text-gray-600 w-45">{{ book.datePublished | date:'dd/MM/yyyy' }}</td>
       <td class="library-table-cell text-center">
         <button (click)="onOpenDetail(book)" pTooltip="Apri dettaglio"
                 tooltipPosition="top"

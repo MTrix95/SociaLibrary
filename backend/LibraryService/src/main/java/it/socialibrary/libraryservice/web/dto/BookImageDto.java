@@ -1,7 +1,7 @@
 package it.socialibrary.libraryservice.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import it.socialibrary.libraryservice.entity.BooksImage;
+import it.socialibrary.libraryservice.entity.BookImage;
 import it.socialibrary.libraryservice.enums.ImageType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,13 +12,13 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * DTO for {@link BooksImage}
+ * DTO for {@link BookImage}
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BooksImageDto implements Serializable {
+public class BookImageDto implements Serializable {
     @NotNull
     private UUID id;
     @NotNull

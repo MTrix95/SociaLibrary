@@ -50,7 +50,7 @@ export class BookSearchComponent {
       .subscribe({
         next: (result) => {
           this.books.set(result.content);
-          this.totalRecords.set(result.totalElements);
+          this.totalRecords.set(result.page.totalElements);
 
           this.isLoading.set(false);
         },

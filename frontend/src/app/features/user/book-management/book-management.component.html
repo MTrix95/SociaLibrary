@@ -4,14 +4,20 @@
     <!-- Sezione Lista -->
     <div class="flex h-full flex-col gap-4 w-full mb-4 min-h-0">
       <div class="flex justify-end">
-        <button class="px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+        <button (click)="onOpenDetail()" class="px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
           <i class="pi pi-plus"></i>
           Aggiungi
         </button>
       </div>
       <div class="rounded-xl flex-1 border border-gray-100 overflow-hidden shadow-sm">
         <p-table
-          [rows]="5"
+          [value]="books()"
+          [lazy]="true"
+          [loading]="loading()"
+          [totalRecords]="totalRecords()"
+          [first]="first"
+          (onLazyLoad)="onLazyLoadHandler($event)"
+          [rows]="10"
           [paginator]="true"
           [scrollable]="true"
           [tableStyleClass]="'h-full'"
@@ -36,12 +42,17 @@
               <td class="library-table-cell font-medium text-gray-900">{{ book.title }}</td>
               <td class="library-table-cell text-gray-600">{{ book.author }}</td>
               <td class="library-table-cell text-gray-600">{{ book.publisher }}</td>
-              <td class="library-table-cell text-gray-600 w-45">{{ book.publishedDate | date:'dd/MM/yyyy' }}</td>
+              <td class="library-table-cell text-gray-600 w-45">{{ book.datePublished | date:'dd/MM/yyyy' }}</td>
               <td class="library-table-cell text-center">
-                <button (click)="onOpenDetail(book)" pTooltip="Apri dettaglio"
+                <button (click)="onOpenDetail(book.id)" pTooltip="Apri dettaglio"
                         tooltipPosition="top"
                         class="p-2 text-gray-400 hover:text-gray-900 cursor-pointer">
                   <i class="pi pi-ellipsis-v"></i>
+                </button>
+                <button (click)="onDeleteBook(book.id)" pTooltip="Elimina"
+                        tooltipPosition="top"
+                        class="p-2 text-gray-400 hover:text-gray-900 cursor-pointer">
+                  <i class="pi pi-trash"></i>
                 </button>
               </td>
             </tr>

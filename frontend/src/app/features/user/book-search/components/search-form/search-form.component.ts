@@ -64,10 +64,8 @@ export class SearchFormComponent implements OnInit {
     if(this.isLocationAvailable()) {
       const location = this.userCoordinates()?.coordinates;
       if(location) {
-        const coordinates = fromLonLat(location, 'EPSG:4326');
-
-        filters.longitude = coordinates[0];
-        filters.latitude = coordinates[1];
+        filters.longitude = location[0];
+        filters.latitude = location[1];
       }
     }
 
