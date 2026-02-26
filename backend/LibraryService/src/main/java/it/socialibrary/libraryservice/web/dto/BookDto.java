@@ -1,6 +1,7 @@
 package it.socialibrary.libraryservice.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.socialibrary.libraryservice.enums.LoanStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.locationtech.jts.geom.Point;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,5 +43,7 @@ public class BookDto implements Serializable {
     private Double latitude;
     private Double longitude;
 
+    private OffsetDateTime lastDateStatus;
+    private LoanStatus status;
     private List<BookImageDto> images;
 }

@@ -1,5 +1,3 @@
-import {Location} from './location';
-
 export interface Book {
   id: string;
   title: string;
@@ -8,6 +6,12 @@ export interface Book {
   isbn: string;
   publisher: string;
   publishedDate: Date;
-  lat: number;
-  lon: number;
+  latitude: number;
+  longitude: number;
+  status?: LoanStatus
+}
+
+export enum LoanStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
 }

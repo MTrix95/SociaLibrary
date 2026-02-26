@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS LOAN_REQUESTS
   user_id UUID NOT NULL,
   status loan_status NOT NULL DEFAULT 'PENDING',
   request_date timestamptz DEFAULT NOW() NOT NULL, -- Prendo il timestamp con il fuso orario essendo un evento utile per le statistiche
+  status_date timestamptz NOT NULL,
 
   CONSTRAINT pk_loan_request PRIMARY KEY (id),
   CONSTRAINT fk_book FOREIGN KEY (book_id) references books(id) ON DELETE CASCADE

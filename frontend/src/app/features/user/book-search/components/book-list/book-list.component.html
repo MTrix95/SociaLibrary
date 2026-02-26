@@ -39,7 +39,8 @@
         </button>
         <button pTooltip="Visualizza in mappa"
                 tooltipPosition="top"
-                [disabled]="!book.location"
+                [disabled]="!book.longitude || !book.latitude"
+                (click)="zoomTo(book.latitude, book.longitude)"
                 class="p-2 text-gray-400 cursor-pointer disabled:opacity-40 disabled:cursor-default not-disabled:hover:text-gray-900">
           <i class="pi pi-map-marker"></i>
         </button>

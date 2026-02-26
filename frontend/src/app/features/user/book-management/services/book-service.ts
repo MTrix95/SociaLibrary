@@ -1,8 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Page} from '../../../../shared/models/page';
-import {Book} from '../../../../shared/models/book';
+import {Book, LoanStatus} from '../../../../shared/models/book';
 import {Observable} from 'rxjs';
+import {BookFilter} from '../../../../shared/models/book-filter';
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +11,12 @@ import {Observable} from 'rxjs';
 export class BookService {
   private httpClient = inject(HttpClient);
 
-  findBooksByUser(idUser: string, page: number, size: number): Observable<Page<Book>> {
+  findBooksByUser(page: number, size: number, filters: BookFilter | null): Observable<Page<Book>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.httpClient.get<Page<Book>>(`/api/library/books/user/${idUser}`, { params });
+    return this.httpClient.post<Page<Book>>('/api/library/books/', filters ?? {}, { params });
   }
 
   deleteBook(idBook: string) {

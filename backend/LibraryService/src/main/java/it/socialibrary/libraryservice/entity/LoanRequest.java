@@ -30,10 +30,7 @@ public class LoanRequest {
     private Book book;
 
     @NotNull
-    @Column(
-            name = "user_id",
-            nullable = false
-    )
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
@@ -48,4 +45,8 @@ public class LoanRequest {
     @NotNull
     @Column(name = "request_date", nullable = false, insertable = false, updatable = false)
     private OffsetDateTime requestDate;
+
+    @NotNull
+    @Column(name = "status_date", nullable = false)
+    private OffsetDateTime statusDate;
 }

@@ -1,6 +1,10 @@
 <div class="flex flex-col h-full bg-white">
   <!-- Sezione Contenuto Scorrevole -->
   <div class="flex-1 flex flex-col gap-6 h-full">
+    <div class="flex flex-col gap-1.5 w-full">
+      <app-search-managment-form [userID]="idUser()" (searchFilter)="onSearchHandler($event)"></app-search-managment-form>
+    </div>
+
     <!-- Sezione Lista -->
     <div class="flex h-full flex-col gap-4 w-full mb-4 min-h-0">
       <div class="flex justify-end">
@@ -17,7 +21,7 @@
           [totalRecords]="totalRecords()"
           [first]="first"
           (onLazyLoad)="onLazyLoadHandler($event)"
-          [rows]="10"
+          [rows]="5"
           [paginator]="true"
           [scrollable]="true"
           [tableStyleClass]="'h-full'"
@@ -31,6 +35,8 @@
               <th class="library-table-header">Autore</th>
               <th class="library-table-header">Editore</th>
               <th class="library-table-header">Data pubblicazione</th>
+              <th class="library-table-header">Data ultimo stato</th>
+              <th class="library-table-header">Status</th>
               <th class="library-table-header text-center">Azioni</th>
             </tr>
           </ng-template>
@@ -43,6 +49,12 @@
               <td class="library-table-cell text-gray-600">{{ book.author }}</td>
               <td class="library-table-cell text-gray-600">{{ book.publisher }}</td>
               <td class="library-table-cell text-gray-600 w-45">{{ book.datePublished | date:'dd/MM/yyyy' }}</td>
+              <td class="library-table-cell text-gray-600 w-45">{{ book.lastDateStatus | date:'dd/MM/yyyy' }}</td>
+              <td class="library-table-cell text-gray-600">
+                @if (book.status) {
+                  <p-tag [severity]="book.status === 'ACCEPTED' ? 'success' : 'warn'" value="{{ book.status }}" />
+                }
+              </td>
               <td class="library-table-cell text-center">
                 <button (click)="onOpenDetail(book.id)" pTooltip="Apri dettaglio"
                         tooltipPosition="top"
@@ -61,7 +73,7 @@
           <!-- Template per lista vuota -->
           <ng-template #emptymessage>
             <tr>
-              <td colspan="6" class="text-center py-12!">
+              <td colspan="8" class="text-center py-12!">
                 <div class="flex flex-col items-center gap-2">
                   <i class="pi pi-search text-gray-300 text-3xl"></i>
                   <span class="text-gray-400 text-sm">Nessun libro trovato</span>

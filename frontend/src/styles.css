@@ -11,6 +11,11 @@ html, body { height: 100%; margin: 0; padding: 0; }
     @apply relative flex flex-col gap-1.5 flex-1;
   }
 
+  .library-input-group .p-select-clear-icon,
+  .library-input-group .p-select-dropdown {
+    @apply h-full flex items-center;
+  }
+
   /* LABEL */
   .library-input-label {
     @apply text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest pointer-events-none;
@@ -19,6 +24,14 @@ html, body { height: 100%; margin: 0; padding: 0; }
   /* DEFAULT FIELD */
   .library-input-field {
     @apply w-full bg-gray-50 border-gray-200 text-gray-700 rounded-xl p-3 shadow-sm transition-all;
+  }
+
+  .library-input-field.p-select {
+    @apply h-12 flex items-center py-0 px-3;
+  }
+
+  .library-input-field.p-select .p-select-label {
+    @apply flex items-center h-full py-0;
   }
 
   /* ICONA */

@@ -1,4 +1,4 @@
-import {Location} from './location';
+import {LoanStatus} from './book';
 
 export interface BookFilter {
   title?: string;
@@ -7,6 +7,8 @@ export interface BookFilter {
   isbn?: string;
   publisher?: string;
   publishedDate?: Date;
+  status?: LoanStatus;
+  userID?: string;
   radius?: number;
   latitude?: number;
   longitude?: number;

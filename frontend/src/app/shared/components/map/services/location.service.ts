@@ -15,6 +15,7 @@ import {environment} from '../../../../../environments/environment';
 export class LocationService implements OnDestroy {
   readonly isLocationEnabled = signal<boolean>(false);
   readonly userCoordinates = signal<Location | null>(null);
+  readonly zoomRequest = signal<{lat: number, lon: number} | null>(null);
 
   private geolocation?: Geolocation;
   private positionLayer?: VectorLayer<VectorSource>;
@@ -62,6 +63,15 @@ export class LocationService implements OnDestroy {
     if (this.geolocation) {
       this.geolocation.setTracking(false);
     }
+  }
+
+  public zoomTo(lat: number, lon: number) {
+    this.zoomRequest.set({ lat, lon });
+  }
+
+  public applyPrivacyCoordiante(coord: number, precision: number = 2) {
+    const factor = Math.pow(10, precision);
+    return Math.round(coord * factor) / factor;
   }
 
   /**

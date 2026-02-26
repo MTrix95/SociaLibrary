@@ -1,6 +1,7 @@
 package it.socialibrary.libraryservice.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.socialibrary.libraryservice.enums.LoanStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class FiltersBookDto implements Serializable {
     private String isbn;
     private String publisher;
     private LocalDate publishedDate;
+    private LoanStatus status;
+    private String userID;
     private Integer radius;
     private Double latitude;
     private Double longitude;

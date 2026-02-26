@@ -39,6 +39,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   constructor() {
     this.setupLocationWarning();
+
+    // Ascolta il signal e scatta in automatico
+    effect(() => {
+      const requestToZoom = this.locationService.zoomRequest();
+      if(requestToZoom && this.map) {
+        this.onZoom(requestToZoom.lat, requestToZoom.lon);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -50,6 +58,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.map) {
       this.map.setTarget(undefined);
       this.map = null;
+    }
+  }
+
+  private onZoom(lat: number, lon: number) {
+    if(this.map) {
+      this.map.getView().animate({
+        center: fromLonLat([lon, lat]),
+        zoom: 17,
+        duration: 1000
+      })
     }
   }
 
@@ -73,7 +91,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         center: fromLonLat(environment.MAP_DEFAULT_CENTER),
         zoom: environment.MAP_DEFAULT_ZOOM,
       }),
-      layers: [...this.createBaseLayers(), this.createQuartieriLayer(), /*this.createLibraryLayer()*/],
+      layers: [...this.createBaseLayers(), this.createQuartieriLayer(), this.createLibraryLayer()],
       controls: this.createControls(),
       target: this.mapContainer.nativeElement,
     });
