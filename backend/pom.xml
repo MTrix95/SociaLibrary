@@ -25,6 +25,16 @@
         <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-dependecies.version>4.0.0</spring-dependecies.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+    </dependencies>
 
     <modules>
         <module>GatewayService</module>
