@@ -1,0 +1,84 @@
+<p-fieldset
+  [toggleable]="true"
+  [collapsed]="false"
+  legend="Filtri"
+  styleClass="rounded-xl! p-2! shadow-sm! border! border-gray-100! bg-white!"
+>
+  <div class="flex flex-col gap-2">
+    <form class="flex flex-col gap-3" [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      <!-- Riga 1 -->
+      <div class="grid grid-cols-3 gap-4 w-full">
+        <!-- 1/3: Titolo -->
+        <div class="library-input-group">
+          <label class="library-input-label">Titolo Libro</label>
+          <i class="pi pi-book"></i>
+          <input pInputText formControlName="title" placeholder="Titolo..." class="library-input-field"/>
+        </div>
+
+        <!-- 1/3: Editore -->
+        <div class="library-input-group">
+          <label class="library-input-label">Editore</label>
+          <i class="pi pi-building"></i>
+          <input pInputText formControlName="publisher" placeholder="Casa editrice..." class="library-input-field"/>
+        </div>
+
+        <!-- 1/3: Autore -->
+        <div class="library-input-group">
+          <label class="library-input-label">Autore</label>
+          <i class="pi pi-user"></i>
+          <input pInputText formControlName="author" placeholder="Autore..." class="library-input-field"/>
+        </div>
+      </div>
+
+      <!-- Riga 2: ISBN, Categoria e Anno -->
+      <div class="flex flex-col md:flex-row gap-4 w-full">
+        <div class="library-input-group">
+          <label class="library-input-label">Codice ISBN</label>
+          <i class="pi pi-barcode"></i>
+          <input pInputText formControlName="isbn" placeholder="ISBN..." class="library-input-field"/>
+        </div>
+        <div class="library-input-group">
+          <label class="library-input-label">Categoria</label>
+          <i class="pi pi-tag"></i>
+          <p-select
+            [options]="cat()"
+            formControlName="genre"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Seleziona una categoria"
+            appendTo="body"
+            class="library-input-field"
+            [showClear]="true">
+          </p-select>
+        </div>
+        <div class="library-input-group">
+          <label class="library-input-label">Status</label>
+          <i class="pi pi-calendar"></i>
+          <p-select
+            [options]="statusOptions"
+            formControlName="status"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Seleziona uno Stato"
+            appendTo="body"
+            class="library-input-field"
+            [showClear]="true">
+          </p-select>
+        </div>
+      </div>
+    </form>
+
+    <!-- FOOTER -->
+    <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
+      <button (click)="onReset()"
+        class="px-6 py-3 rounded-xl text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer">
+        Reset
+      </button>
+      <button (click)="onSearch()"
+        class="px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+        <i class="pi pi-search"></i>
+        Ricerca
+      </button>
+    </div>
+  </div>
+</p-fieldset>

@@ -11,8 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,8 +43,9 @@ class BookController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<BookDto>> findById(@PathVariable("id") final UUID id) {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<BookDto> findById(@PathVariable("id") final UUID id) {
+        BookDto result = this.bookService.findById(id);
+        return ResponseEntity.ok(result);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
@@ -51,17 +58,18 @@ class BookController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> create(@RequestBody BookDto value) {
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> create(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestPart("book") BookDto value,
+            @RequestPart(value = "cover", required = false) MultipartFile cover,
+            @RequestPart(value = "previews", required = false) List<MultipartFile> previews) throws IOException {
+        // Aggiungo l'ID utente
+        String userId = jwt.getSubject();
+        value.setUserId(UUID.fromString(userId));
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookDto> update(
-            @PathVariable("id") final UUID id,
-            @RequestBody BookDto value) {
-        return ResponseEntity.ok(null);
+        this.bookService.save(value, cover, previews);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")

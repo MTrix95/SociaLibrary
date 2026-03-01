@@ -19,7 +19,7 @@ export class BookService {
     return this.httpClient.post<Page<Book>>('/api/library/books/', filters ?? {}, { params });
   }
 
-  deleteBook(idBook: string) {
+  deleteBook(idBook: string): Observable<any> {
     return this.httpClient.delete(`/api/library/books/${idBook}`);
   }
 }

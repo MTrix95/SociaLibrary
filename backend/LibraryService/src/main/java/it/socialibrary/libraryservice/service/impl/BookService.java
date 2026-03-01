@@ -1,38 +1,58 @@
 package it.socialibrary.libraryservice.service.impl;
 
 import it.socialibrary.libraryservice.entity.Book;
+import it.socialibrary.libraryservice.entity.Category;
+import it.socialibrary.libraryservice.enums.LoanStatus;
+import it.socialibrary.libraryservice.exceptions.LibraryException;
 import it.socialibrary.libraryservice.exceptions.NotFoundException;
 import it.socialibrary.libraryservice.mappers.IBookMapper;
+import it.socialibrary.libraryservice.mappers.ICategoryMapper;
 import it.socialibrary.libraryservice.repository.BookRepository;
 import it.socialibrary.libraryservice.repository.specifications.BookSpecification;
+import it.socialibrary.libraryservice.service.IBookImageService;
 import it.socialibrary.libraryservice.service.IBookService;
+import it.socialibrary.libraryservice.service.ICategoryService;
+import it.socialibrary.libraryservice.service.ILoanService;
 import it.socialibrary.libraryservice.web.dto.BookDto;
 import it.socialibrary.libraryservice.web.dto.FiltersBookDto;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService implements IBookService {
 
     private final BookRepository bookRepository;
 
-    private final BookImageService bookImageService;
+    private final ICategoryService categoryService;
+    private final IBookImageService bookImageService;
+    private final ILoanService loanService;
     private final IBookMapper bookMapper;
+    private final ICategoryMapper categoryMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookImageService bookImageService, IBookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, ICategoryService categoryService, IBookImageService bookImageService, ILoanService loanService, IBookMapper bookMapper, ICategoryMapper categoryMapper) {
         this.bookRepository = bookRepository;
+        this.categoryService = categoryService;
         this.bookImageService = bookImageService;
+        this.loanService = loanService;
         this.bookMapper = bookMapper;
+        this.categoryMapper = categoryMapper;
     }
 
     /**
@@ -84,28 +104,48 @@ public class BookService implements IBookService {
 
     @Override
     @Transactional
-    public void save(BookDto bookDto) throws IOException {
+    public void save(BookDto bookDto, MultipartFile cover, List<MultipartFile> previews) throws IOException {
         Book book = this.bookMapper.toEntity(bookDto);
+
+        // 1: Salvo le coordinate
+        if(bookDto.getLatitude() != null && bookDto.getLongitude() != null) {
+            GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+
+            // Creo il punto da inviare al DB
+            Point point = geometryFactory.createPoint(new Coordinate(bookDto.getLatitude(), bookDto.getLongitude()));
+            book.setLocation(point);
+        }
+
+        // 2: Creo l'associazione N:N tra book e categories
+        if(bookDto.getCategories() != null && !bookDto.getCategories().isEmpty()) {
+            Set<Category> categories = bookDto.getCategories().stream()
+                    .map(id ->
+                            categoryMapper.toEntity(categoryService.findById(id).orElseThrow())
+                    )
+                    .collect(Collectors.toSet());
+
+            book.setCategories(categories);
+        }
+
+        // 3: Salvo il libro
         this.bookRepository.save(book);
 
-        // TODO: GESTIONE DELLE IMMAGINI
-        this.bookImageService.createThumbnail(book, null);
-        this.bookImageService.createPreview(book, null);
-    }
+        // 4: Salvo la copertina
+        this.bookImageService.createThumbnail(book, cover);
 
-    @Override
-    @Transactional
-    public BookDto update(BookDto bookDto) {
-        Book book = this.bookMapper.toEntity(bookDto);
-        this.bookRepository.save(book);
-
-        return findById(bookDto.getId());
+        // 5: Savlo le anteprime
+        this.bookImageService.createPreview(book, previews);
     }
 
     @Override
     @Transactional
     public void delete(UUID id) throws NotFoundException {
         if(!this.bookRepository.existsById(id)) throw new NotFoundException("Record not found");
+
+        if (this.loanService.findByBook_IdAndStatus(id, LoanStatus.PENDING).isPresent()
+                || this.loanService.findByBook_IdAndStatus(id, LoanStatus.ACCEPTED).isPresent()) {
+            throw new LibraryException("Impossibile eliminare il libro: esistono richieste di prestito in corso (PENDING o ACCEPTED).");
+        }
 
         this.bookRepository.deleteById(id);
     }

@@ -6,7 +6,7 @@ export interface BookFilter {
   genre?: string;
   isbn?: string;
   publisher?: string;
-  publishedDate?: Date;
+  datePublished?: Date;
   status?: LoanStatus;
   userID?: string;
   radius?: number;

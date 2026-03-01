@@ -10,12 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,21 +45,27 @@ public class BookImageService implements IBookImageService {
         if(PATH_FILE_IMAGES == null) throw new IOException("Path file images not found");
         if(file == null || file.isEmpty()) return;
 
-        String fileName = UUID.randomUUID() + ".jpg";
         String bookId = book.getId().toString();
+        Path thumbnailDir = Paths.get(PATH_FILE_IMAGES, bookId, "thumbnail");
 
-        File directory = new File(PATH_FILE_IMAGES + File.separator + bookId);
+        // 1. PULISCO I VECCHI RECORD DI TIPO COVER
+        bookImageRepository.deleteByBookAndType(book, ImageType.COVER);
 
-        if(!directory.exists()) Files.createDirectories(directory.toPath());
+        // 2. Se esistono le cartelle elimino in modo ricorsivo il file presenti nel FS
+        if(Files.exists(thumbnailDir)) {
+            FileSystemUtils.deleteRecursively(thumbnailDir);
+        }
+        // Ricreo l'alberatura delle cartelel
+        Files.createDirectories(thumbnailDir);
 
-        File destination = new File(directory, fileName);
+        String fileName = "thumbnail.jpg";
+        File destination = new File(thumbnailDir.toFile(), fileName);
         try(InputStream inputStream = file.getInputStream()) {
             // Genera la miniatura
             Thumbnails.of(inputStream).size(200, 200).toFile(destination);
         }
 
-
-        String publicUrl = urlPrexix + "/images/" + bookId + "/" + fileName;
+        String publicUrl = urlPrexix + "/images/" + bookId + "/thumbnail/" + fileName;
 
         BookImage bookImage = new BookImage();
         bookImage.setBook(book);
@@ -72,15 +82,24 @@ public class BookImageService implements IBookImageService {
         if (files == null || files.isEmpty()) return;
 
         String bookId = book.getId().toString();
-        File directory = new File(PATH_FILE_IMAGES + File.separator + bookId);
-        if (!directory.exists()) Files.createDirectories(directory.toPath());
+        Path directory = Paths.get(PATH_FILE_IMAGES, bookId, "previews");
+
+        // 1. PULISCO I VECCHI RECORD DI TIPO COVER
+        bookImageRepository.deleteByBookAndType(book, ImageType.PREVIEW);
+
+        // 2. Se esistono le cartelle elimino in modo ricorsivo il file presenti nel FS
+        if(Files.exists(directory)) {
+            FileSystemUtils.deleteRecursively(directory);
+        }
+
+        Files.createDirectories(directory);
 
         List<BookImage> bookImageList = new ArrayList<>(files.size());
         for (MultipartFile file : files) {
             if (file.isEmpty()) continue;
 
             String fileName = UUID.randomUUID() + ".jpg";
-            File destination = new File(directory, fileName);
+            File destination = new File(directory.toFile(), fileName);
 
             try (InputStream is = file.getInputStream()) {
                 Thumbnails.of(is)
@@ -90,7 +109,7 @@ public class BookImageService implements IBookImageService {
                         .toFile(destination);
             }
 
-            String publicUrl = urlPrexix + "/images/" + bookId + "/" + fileName;
+            String publicUrl = urlPrexix + "/images/" + bookId + "/previews/" + fileName;
 
             BookImage bookImage = new BookImage();
             bookImage.setBook(book);

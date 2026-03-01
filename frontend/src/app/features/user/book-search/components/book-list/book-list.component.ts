@@ -40,16 +40,26 @@ export class BookListComponent {
     }
   }
 
-  protected onOpenDetail(book: Book) {
+  protected onOpenDetail(bookID: string) {
     this.dialogService.open(BookDetailComponent, {
       header: 'Dettaglio',
       data: {
         // Passo l'oggetto selezionato alla modale
-        book,
+        bookID,
         readOnly: true,
         footerConfig: {
           showSaveButton: false,
           showCloseButton: true,
+          buttons: [
+            {
+              label: 'Conferma',
+              icon: 'pi pi-check',
+              action: () => {
+                console.log('Conferma...');
+              },
+              closeOnClick: true // Chiude la dialog dopo l'azione
+            }
+          ]
         }
       },
       width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
@@ -66,7 +76,6 @@ export class BookListComponent {
       maximizable: true,   // Permette all'utente di espandere la
       resizable: false, // Non permette all'utente di ridimensionare la modale
       closable: true,
-
       templates: {
         footer: FooterComponent
       }

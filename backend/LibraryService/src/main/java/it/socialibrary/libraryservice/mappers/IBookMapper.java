@@ -2,6 +2,7 @@ package it.socialibrary.libraryservice.mappers;
 
 
 import it.socialibrary.libraryservice.entity.Book;
+import it.socialibrary.libraryservice.entity.Category;
 import it.socialibrary.libraryservice.entity.LoanRequest;
 import it.socialibrary.libraryservice.enums.LoanStatus;
 import it.socialibrary.libraryservice.web.dto.BookDto;
@@ -11,9 +12,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 import java.time.OffsetDateTime;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface IBookMapper extends IGeometryMapper<Book, BookDto>{
@@ -21,7 +21,23 @@ public interface IBookMapper extends IGeometryMapper<Book, BookDto>{
     @Mapping(target = "latitude", expression = "java(lat(book.getLocation()))")
     @Mapping(source = "loanRequests", target = "status")
     @Mapping(source = "loanRequests", target = "lastDateStatus")
+    @Mapping(source = "categories", target = "categories")
     BookDto toDTO(Book book);
+
+    default Set<UUID> categoriesID(Set<Category> categories) {
+        if(categories == null || categories.isEmpty()) return new HashSet<>();
+        return categories.stream().map(Category::getId).collect(Collectors.toSet());
+    }
+
+    default Set<Category> toCategory(Set<UUID> idsCategorie) {
+        if(idsCategorie == null || idsCategorie.isEmpty()) return new HashSet<>();
+        return idsCategorie.stream().map(id -> {
+            Category cat = new Category();
+            cat.setId(id);
+
+            return cat;
+        }).collect(Collectors.toSet());
+    }
 
     default LoanStatus lastRequest(Set<LoanRequest> requests) {
         if(requests == null || requests.isEmpty()) return null; // Nessuna richiesta

@@ -6,6 +6,5 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ILoanRequestMapper {
-    LoanRequestDto toDto(LoanRequest loanRequest);
+public interface ILoanRequestMapper extends IMapper<LoanRequest, LoanRequestDto> {
 }

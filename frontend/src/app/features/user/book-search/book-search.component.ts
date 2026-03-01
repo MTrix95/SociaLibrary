@@ -1,4 +1,4 @@
-import {Component, inject, signal, WritableSignal} from '@angular/core';
+import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {BookListComponent} from './components/book-list/book-list.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {SearchFormComponent} from './components/search-form/search-form.component';
@@ -6,6 +6,7 @@ import {BookFilter} from '../../../shared/models/book-filter';
 import {BookSearchService} from './services/book-search.service';
 import {Book} from '../../../shared/models/book';
 import {TableLazyLoadEvent} from 'primeng/table';
+import {Category} from '../../../shared/models/category';
 
 @Component({
   selector: 'app-book-search',
@@ -16,15 +17,24 @@ import {TableLazyLoadEvent} from 'primeng/table';
   providers: [ DialogService ],
   templateUrl: './book-search.component.html',
 })
-export class BookSearchComponent {
-  private bookSearchService: BookSearchService = inject(BookSearchService);
+export class BookSearchComponent implements OnInit {
+  private _bookSearchService: BookSearchService = inject(BookSearchService);
 
-  public books = signal<Book[]>([]);
-  public totalRecords = signal<number>(0);
-  public isLoading = signal<boolean>(false);
-  public first = signal<number>(0);
+  public readonly categories: WritableSignal<Category[]> = signal([]);
+  public readonly books: WritableSignal<Book[]> = signal([]);
+  public readonly totalRecords: WritableSignal<number> = signal(0);
+  public readonly isLoading: WritableSignal<boolean> = signal(false);
+  public readonly first: WritableSignal<number> = signal<number>(0);
 
-  private lastFilters = signal<BookFilter | null>(null);
+  private readonly lastFilters: WritableSignal<BookFilter | null> = signal(null);
+
+  ngOnInit(): void {
+    this._bookSearchService.findCategories().subscribe({
+      next: (result) => {
+        this.categories.set(result);
+      }
+    })
+  }
 
   protected onSearchHandler(filters: BookFilter) {
     this.lastFilters.set(filters);
@@ -46,7 +56,7 @@ export class BookSearchComponent {
   private fetchData(page: number, size: number, filters: BookFilter | null) {
     this.isLoading.set(true);
 
-    this.bookSearchService.searchBooks(filters, page, size)
+    this._bookSearchService.searchBooks(filters, page, size)
       .subscribe({
         next: (result) => {
           this.books.set(result.content);

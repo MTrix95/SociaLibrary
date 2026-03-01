@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,6 +30,12 @@ public class LoanService implements ILoanService {
     public Page<LoanRequestDto> findByBook_UserIdAndStatus(UUID userID, LoanStatus status, Pageable pageable) {
         Page<LoanRequest> loanRequest = this.loanRequestRepository.findByBook_UserIdAndStatus(userID, status, pageable);
 
-        return loanRequest.map(loanRequestMapper::toDto);
+        return loanRequest.map(loanRequestMapper::toDTO);
+    }
+
+    @Override
+    public Optional<LoanRequestDto> findByBook_IdAndStatus(UUID bookID, LoanStatus status) {
+        return loanRequestRepository.findByBook_IdAndStatus(bookID, status)
+                .map(loanRequestMapper::toDTO);
     }
 }

@@ -38,13 +38,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   );
 
   constructor() {
-    this.setupLocationWarning();
-
     // Ascolta il signal e scatta in automatico
     effect(() => {
       const requestToZoom = this.locationService.zoomRequest();
+      const isEnabled = this.isLocationAvailable();
+
       if(requestToZoom && this.map) {
-        this.onZoom(requestToZoom.lat, requestToZoom.lon);
+        this.onZoom(requestToZoom.lon, requestToZoom.lat);
+      }
+
+      if (!isEnabled) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Privacy e Posizione',
+          detail:
+            "Senza l'accesso alla posizione, la ricerca spaziale dei libri non sarà disponibile.",
+          sticky: true,
+        });
       }
     });
   }
@@ -56,12 +66,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.map) {
+      // Stoppo la geolocalizzazione
+      this.locationService.stopTracking();
+
       this.map.setTarget(undefined);
       this.map = null;
     }
   }
 
-  private onZoom(lat: number, lon: number) {
+  private onZoom(lon: number, lat: number) {
     if(this.map) {
       this.map.getView().animate({
         center: fromLonLat([lon, lat]),
@@ -69,20 +82,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         duration: 1000
       })
     }
-  }
-
-  private setupLocationWarning(): void {
-    effect(() => {
-      if (!this.isLocationAvailable()) {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Privacy e Posizione',
-          detail:
-            "Senza l'accesso alla posizione, la ricerca spaziale dei libri non sarà disponibile.",
-          sticky: true,
-        });
-      }
-    });
   }
 
   private buildMap(): Map {
@@ -123,7 +122,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Layer WMS che interroga GeoServer (stile SLD e clustering gestiti lato server).
+   * Layer WMS che interroga GeoServer.
    */
   private createLibraryLayer(): TileLayer<TileWMS> {
     return new TileLayer({

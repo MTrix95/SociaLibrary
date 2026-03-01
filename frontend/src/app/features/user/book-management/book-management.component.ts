@@ -1,18 +1,20 @@
-import {Component, computed, inject, Signal, signal, WritableSignal} from '@angular/core';
-import { DialogService } from 'primeng/dynamicdialog';
+import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import { TabsModule } from 'primeng/tabs';
 import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import {Tooltip} from 'primeng/tooltip';
-import {Book, LoanStatus} from '../../../shared/models/book';
+import {Book} from '../../../shared/models/book';
 import {BookService} from './services/book-service';
-import {UserProfile} from '../../../shared/models/user-profile';
 import {AuthService} from '../../../core/services/auth.service';
 import {MessageService} from 'primeng/api';
-import {SearchFormComponent} from '../book-search/components/search-form/search-form.component';
 import {SearchManagmentFormComponent} from './components/search-managment-form/search-managment-form.component';
 import {BookFilter} from '../../../shared/models/book-filter';
 import {Tag} from 'primeng/tag';
+import {BookDetailComponent} from '../book-detail/book-detail.component';
+import {FooterComponent} from '../../../shared/components/dialog/components/footer/footer.component';
+import {Category} from '../../../shared/models/category';
+import {BookSearchService} from '../book-search/services/book-search.service';
 
 
 @Component({
@@ -28,15 +30,16 @@ import {Tag} from 'primeng/tag';
   providers: [ DialogService ],
   templateUrl: './book-management.component.html',
 })
-export class BookManagementComponent {
-  private readonly bookService = inject(BookService);
-  private readonly authService: AuthService = inject(AuthService);
-  private readonly messageService = inject(MessageService);
+export class BookManagementComponent implements OnInit {
+  private _bookService = inject(BookService);
+  private _bookSearchService = inject(BookSearchService);
+  private _authService: AuthService = inject(AuthService);
+  private _messageService = inject(MessageService);
+  private _dialogService = inject(DialogService);
 
-  protected userProfile: WritableSignal<UserProfile | null> = this.authService.userProfile;
   protected idUser: Signal<string> = computed(() => {
-    return this.userProfile()?.sub || '';
-  })
+    return this._authService.userProfile()?.sub || '';
+  });
 
   protected loading: WritableSignal<boolean> = signal(false);
   protected books: WritableSignal<Book[]> = signal([]);
@@ -44,6 +47,17 @@ export class BookManagementComponent {
   protected lastFilters: WritableSignal<BookFilter | null> = signal(null);
 
   protected first: number = 0;
+
+  public categories: WritableSignal<Category[]> = signal([]);
+  ngOnInit(): void {
+    this._bookSearchService.findCategories().subscribe({
+      next: (result) => {
+        if(result) {
+          this.categories.set(result);
+        }
+      }
+    })
+  }
 
   protected onSearchHandler(filters: BookFilter) {
     this.lastFilters.set(filters);
@@ -53,14 +67,41 @@ export class BookManagementComponent {
   }
 
   protected onOpenDetail(id?: string) {
-
+    this._dialogService.open(BookDetailComponent, {
+      header: 'Dettaglio',
+      data: {
+        bookID: id,
+        footerConfig: {
+          showSaveButton: true,
+          showCloseButton: true,
+        }
+      },
+      width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
+      height: '90vh',     // Altezza quasi a tutto schermo
+      contentStyle: {
+        'padding': '0 1.5rem',
+        'display': 'flex',
+        'flex-direction': 'column',
+        'height': '100%'
+      },
+      position: 'topright', // Verrà posizionato al centro della pagina
+      baseZIndex: 10000,
+      modal: false, // Evito che ci sia l'overlay dietro alla modale
+      maximizable: true,   // Permette all'utente di espandere la
+      resizable: false, // Non permette all'utente di ridimensionare la modale
+      closable: true,
+      duplicate: false,
+      templates: {
+        footer: FooterComponent
+      }
+    });
   }
 
   protected onDeleteBook(id: string) {
-    this.bookService.deleteBook(id)
+    this._bookService.deleteBook(id)
       .subscribe({
-        next: (result) => {
-          this.messageService.add({
+        next: () => {
+          this._messageService.add({
             severity: 'info',
             summary: 'Info',
             detail: 'Libro eliminato con successo'
@@ -68,12 +109,7 @@ export class BookManagementComponent {
 
           this.fetchData(0, 5, this.lastFilters());
         },
-        error: (err) =>
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Info',
-            detail: 'Non è stato possibile eliminare il libro:\n' + err.message
-          })
+        error: (err) => console.error(err)
       })
   }
 
@@ -92,7 +128,7 @@ export class BookManagementComponent {
   private fetchData(page: number, size: number, filters: BookFilter | null) {
     this.loading.set(true);
 
-    this.bookService.findBooksByUser(page, size, filters)
+    this._bookService.findBooksByUser(page, size, filters)
       .subscribe({
         next: (result) => {
           this.books.set(result.content);
@@ -100,15 +136,7 @@ export class BookManagementComponent {
 
           this.loading.set(false);
         },
-        error: (err) => {
-          this.loading.set(false)
-
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Info',
-            detail: 'Non è stato caricare i libri dell\'utente'
-          })
-        }
+        error: (err) => this.loading.set(false)
       })
   }
 }

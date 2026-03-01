@@ -3,6 +3,10 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:local}
   application:
     name: LibraryService
+  servlet:
+    multipart:
+      max-file-size: 10MB #Limite singolo file
+      max-request-size: 50MB #Limite totale
   data:
     web:
       pageable:

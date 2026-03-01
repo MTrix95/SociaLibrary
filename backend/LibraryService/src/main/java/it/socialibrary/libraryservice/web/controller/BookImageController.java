@@ -21,9 +21,10 @@ public class BookImageController {
 
     private static final String PATH_FILE_IMAGES = System.getenv("SHARED_DATA");
 
-    @GetMapping("/{idBook}/{filename:.+}")
+    @GetMapping("/{idBook}/{folder}/{filename:.+}")
     public ResponseEntity<Resource> getImage(
             @PathVariable("idBook") UUID idBook,
+            @PathVariable("folder") String folder,
             @PathVariable("filename") String filename) throws MalformedURLException {
 
         if (PATH_FILE_IMAGES == null) {
@@ -31,7 +32,10 @@ public class BookImageController {
         }
 
         try {
-            Path path = Paths.get(PATH_FILE_IMAGES).resolve(idBook.toString()).resolve(filename).normalize();
+            Path path = Paths.get(PATH_FILE_IMAGES)
+                    .resolve(idBook.toString())
+                    .resolve(folder)
+                    .resolve(filename).normalize();
             Resource resource = new UrlResource(path.toUri());
 
             if (resource.exists() || resource.isReadable()) {

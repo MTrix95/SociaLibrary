@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, output} from '@angular/core';
+import {Component, computed, inject, input, Input, OnInit, output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {Fieldset} from 'primeng/fieldset';
@@ -7,7 +7,8 @@ import {SelectButton} from 'primeng/selectbutton';
 import {InputNumber} from 'primeng/inputnumber';
 import {LocationService} from '../../../../../shared/components/map/services/location.service';
 import {BookFilter} from '../../../../../shared/models/book-filter';
-import {fromLonLat} from 'ol/proj';
+import {Category} from '../../../../../shared/models/category';
+import {Select} from 'primeng/select';
 
 @Component({
   selector: 'app-search-form',
@@ -18,7 +19,8 @@ import {fromLonLat} from 'ol/proj';
     DatePicker,
     SelectButton,
     InputNumber,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Select
   ],
   templateUrl: './search-form.component.html',
   styles: ``,
@@ -26,6 +28,8 @@ import {fromLonLat} from 'ol/proj';
 export class SearchFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private locationService: LocationService = inject(LocationService);
+
+  public cat = input.required<Category[]>();
 
   private isLocationAvailable = computed(() => {
     return this.locationService.isLocationEnabled()
@@ -49,10 +53,10 @@ export class SearchFormComponent implements OnInit {
     this.searchForm = this.fb.group({
       title: new FormControl({ value: '', disabled: false }, { validators: [] }),
       author: new FormControl({ value: '', disabled: false }, { validators: [] }),
-      genre: new FormControl({ value: '', disabled: false }, { validators: [] }),
+      genre: new FormControl({ value: null, disabled: false }, { validators: [] }),
       isbn: new FormControl({ value: '', disabled: false }, { validators: [] }),
       publisher: new FormControl({ value: '', disabled: false }, { validators: [] }),
-      publishedDate: new FormControl({ value: null, disabled: false }, { validators: [] }),
+      datePublished: new FormControl({ value: null, disabled: false }, { validators: [] }),
       radius: new FormControl({ value: null, disabled: !this.isLocationAvailable() }, { validators: [] })
     });
   }

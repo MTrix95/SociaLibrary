@@ -1,6 +1,7 @@
 package it.socialibrary.libraryservice.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.socialibrary.libraryservice.enums.LoanStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanRequestDto implements Serializable {
-
     private UUID id;
-    @NotNull
-    private BookDto book;
-    private Object status;
-    @NotNull
+    private LoanStatus status;
     private OffsetDateTime requestDate;
 }

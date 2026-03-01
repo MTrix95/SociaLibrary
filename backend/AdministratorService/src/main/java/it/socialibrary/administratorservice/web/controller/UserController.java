@@ -36,7 +36,7 @@ class UserController {
         return ResponseEntity.ok(pages);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> findById(@PathVariable("id") final UUID id) {
         return ResponseEntity.ok(userService.findById(id));

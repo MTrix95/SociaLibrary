@@ -26,7 +26,8 @@ html, body { height: 100%; margin: 0; padding: 0; }
     @apply w-full bg-gray-50 border-gray-200 text-gray-700 rounded-xl p-3 shadow-sm transition-all;
   }
 
-  .library-input-field.p-select {
+  .library-input-field.p-select,
+  .library-input-field.p-multiselect {
     @apply h-12 flex items-center py-0 px-3;
   }
 
@@ -42,6 +43,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
   /* Se il gruppo contiene un'icona, aggiungi il padding all'input automaticamente */
   .library-input-group:has(i) .library-input-field {
     @apply pl-11;
+  }
+
+  textarea.library-input-field {
+    @apply resize-none;
   }
 
   /* FOCUS */

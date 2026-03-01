@@ -33,7 +33,7 @@ public class UserProvisioning extends OncePerRequestFilter {
 
         // Verifico se non è autenticato cosi da skippare il provisioning
         if(!(auth instanceof JwtAuthenticationToken jwtAuth) || !auth.isAuthenticated()) {
-            // Continuo con il filtro cosi non salva se non ci sono utenti autenticati, utile per gli endpoint pubblici
+            // Continuo con il filtro cosi non salva se non ci sono utenti autenticati
             filterChain.doFilter(request, response);
             return;
         }

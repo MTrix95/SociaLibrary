@@ -43,7 +43,7 @@ public class BookSpecification {
             if (filters.getGenre() != null && !filters.getGenre().isEmpty()) {
                 // Join con l'insieme dellecategorie
                 Join<Book, Category> categoryJoin = from.join("categories");
-                predicates.add(categoryJoin.get("name").in(filters.getGenre()));
+                predicates.add(categoryJoin.get("id").in(UUID.fromString(filters.getGenre())));
             }
 
             // ISBN

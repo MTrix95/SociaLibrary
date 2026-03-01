@@ -1,9 +1,12 @@
 package it.socialibrary.libraryservice.service;
 
-import it.socialibrary.libraryservice.entity.Category;
+import it.socialibrary.libraryservice.web.dto.CategoryDto;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface ICategoryService {
-    List<Category> findAll();
+    List<CategoryDto> findAll();
+    Optional<CategoryDto> findById(UUID id);
 }

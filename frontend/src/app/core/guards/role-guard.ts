@@ -10,7 +10,7 @@ import {AuthService} from '../services/auth.service';
  * RoleGuard - Controllo degli accessi basato sui ruoli.
  *
  * Estende la sicurezza dell'applicazione verificando che l'utente autenticato
- * possieda i permessi necessari (es. ROLE_ADMIN) per accedere a specifiche aree.
+ * possieda i permessi necessari per accedere a specifiche aree.
  * In caso di permessi insufficienti, l'utente viene reindirizzato alla pagina principale.
  */
 @Injectable({

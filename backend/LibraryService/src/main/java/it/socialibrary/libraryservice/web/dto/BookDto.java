@@ -1,6 +1,7 @@
 package it.socialibrary.libraryservice.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.socialibrary.libraryservice.entity.BookImage;
 import it.socialibrary.libraryservice.enums.LoanStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,7 +14,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,13 +40,18 @@ public class BookDto implements Serializable {
     @Size(max = 255)
     private String description;
     private LocalDate datePublished;
-    @Size(max = 255)
+    @NotNull(message = "Il campo publisher è obbligatorio")
+    @Size(message = "Hai superato il limite per il campo publisher", min = 1, max = 255)
     private String publisher;
     private UUID userId;
     private Double latitude;
     private Double longitude;
 
+    @NotNull(message = "Il campo categoria dev'essere obbligatorio")
+    private Set<UUID> categories = new HashSet<>();
     private OffsetDateTime lastDateStatus;
     private LoanStatus status;
-    private List<BookImageDto> images;
+
+    private Set<LoanRequestDto> loanRequests = new HashSet<>();
+    private Set<BookImageDto> bookImages = new HashSet<>();
 }

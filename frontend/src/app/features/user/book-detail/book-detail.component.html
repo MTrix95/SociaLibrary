@@ -1,23 +1,41 @@
-
-<p-tabs value="0" class="flex-1 flex min-h-0 h-full">
+<p-tabs value="0" class="flex-1 flex flex-col min-h-0 h-full">
   <p-tablist>
     <p-tab value="0">Metadata</p-tab>
-    <p-tab value="1">Richiesta prestito</p-tab>
+    @if (hasImages) {
+      <p-tab value="1">Anteprima</p-tab>
+    }
   </p-tablist>
-  <p-tabpanels class="flex-1 flex min-h-0 h-full">
-    <p-tabpanel value="0">
-      <p class="m-0">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum.
-      </p>
+
+  <!-- DETTAGLIO METADATA -->
+  <p-tabpanels class="flex-1 min-h-0">
+    <p-tabpanel value="0" class="h-full">
+      <app-metadata-form [cat]="categories()" [isReadOnly]="readOnly" [bookDetail]="book()"></app-metadata-form>
     </p-tabpanel>
-    <p-tabpanel value="1">
-      <p class="m-0">
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
-        culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-      </p>
+
+    <!-- DETTAGLIO ANTEPRIMA -->
+    <p-tabpanel value="1" class="h-full">
+      <div class="w-full flex justify-center py-4">
+        <p-galleria
+          [value]="images()"
+          [numVisible]="5"
+          [showThumbnails]="false"
+          [showIndicators]="true"
+          [showItemNavigators]="true"
+          [circular]="true"
+          [containerStyle]="{'height': '500px', 'width': '100%', 'max-width': '800px'}"
+        >
+          <ng-template #item let-item>
+            <!-- Rimosso flex-center perché l'immagine ora deve riempire tutto -->
+            <div class="h-full w-full">
+              <img
+                [src]="item.urlImage"
+                class="h-full w-full object-cover block"
+                [alt]="item.id"
+              />
+            </div>
+          </ng-template>
+        </p-galleria>
+      </div>
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>
-

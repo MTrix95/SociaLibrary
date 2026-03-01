@@ -19,10 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BookImageDto implements Serializable {
-    @NotNull
     private UUID id;
-    @NotNull
-    private BookDto book;
-    private UUID urlImage;
+    private String urlImage;
     private ImageType type;
 }

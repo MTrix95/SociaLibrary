@@ -1,4 +1,4 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {inject, Injectable, signal, WritableSignal} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {authCodeFlowConfig} from '../constants/auth.config';
 import {UserProfile} from '../../shared/models/user-profile';
@@ -9,8 +9,8 @@ import {UserProfile} from '../../shared/models/user-profile';
 export class AuthService {
   private oauthService: OAuthService = inject(OAuthService);
 
-  readonly userProfile = signal<UserProfile | null>(null);
-  readonly isLoggedIn = signal<boolean | false>(false)
+  userProfile: WritableSignal<UserProfile | null> = signal(null);
+  isLoggedIn: WritableSignal<boolean | false> = signal(false);
 
   constructor() {
     this.oauthService.configure(authCodeFlowConfig);

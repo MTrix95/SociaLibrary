@@ -7,6 +7,7 @@ import {Circle, Fill, Stroke, Style} from 'ol/style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {environment} from '../../../../../environments/environment';
+import {toLonLat} from 'ol/proj';
 
 
 @Injectable({
@@ -78,11 +79,12 @@ export class LocationService implements OnDestroy {
    * Inizializza l'oggetto Geolocation di OpenLayers.
    */
   private initializeGeolocation(map: Map): void {
+    const viewPojection = map.getView().getProjection();
     this.geolocation = new Geolocation({
       trackingOptions: {
         enableHighAccuracy: true
       },
-      projection: map.getView().getProjection(),
+      projection: viewPojection,
     });
   }
 
@@ -157,15 +159,18 @@ export class LocationService implements OnDestroy {
       return;
     }
 
-    const coordinates = this.geolocation.getPosition();
-    if (coordinates) {
+    const position = this.geolocation.getPosition();
+    if (position) {
+      // 1. Trasformo le coordinate in EPSG:4326 (utile per il salvataggio a DB)
+      const lonLat = toLonLat(position, this.geolocation.getProjection());
+
       const coordinate: Location = {
         type: 'Point',
-        coordinates: [coordinates[0], coordinates[1]]
+        coordinates: [lonLat[0], lonLat[1]] // [Lon, Lat]
       };
 
       this.updateLocationStatus(true, coordinate);
-      this.positionFeature.setGeometry(new Point(coordinates));
+      this.positionFeature.setGeometry(new Point(position));
     }
   }
 

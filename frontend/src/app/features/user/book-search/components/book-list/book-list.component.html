@@ -32,7 +32,7 @@
       <td class="library-table-cell text-gray-600">{{ book.publisher }}</td>
       <td class="library-table-cell text-gray-600 w-45">{{ book.datePublished | date:'dd/MM/yyyy' }}</td>
       <td class="library-table-cell text-center">
-        <button (click)="onOpenDetail(book)" pTooltip="Apri dettaglio"
+        <button (click)="onOpenDetail(book.id)" pTooltip="Apri dettaglio"
                 tooltipPosition="top"
                 class="p-2 text-gray-400 hover:text-gray-900 cursor-pointer">
           <i class="pi pi-ellipsis-v"></i>

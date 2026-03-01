@@ -46,13 +46,22 @@
           <div class="library-input-group">
             <label class="library-input-label">Categoria</label>
             <i class="pi pi-tag"></i>
-            <input pInputText formControlName="genre" placeholder="Genere..." class="library-input-field"/>
+            <p-select
+              [options]="cat()"
+              formControlName="genre"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Seleziona una categoria"
+              appendTo="body"
+              class="library-input-field"
+              [showClear]="true">
+            </p-select>
           </div>
           <div class="library-input-group">
             <label class="library-input-label">Data Pubblicazione</label>
             <i class="pi pi-calendar"></i>
             <p-datepicker
-              formControlName="publishedDate"
+              formControlName="datePublished"
               dateFormat="dd/mm/yy"
               placeholder="Seleziona data"
               [showIcon]="false"

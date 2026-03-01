@@ -17,8 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CategoryDto implements Serializable {
-
     private UUID id;
-
     private String name;
 }
