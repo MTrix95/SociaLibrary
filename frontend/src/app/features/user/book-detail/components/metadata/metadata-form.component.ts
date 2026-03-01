@@ -3,12 +3,9 @@ import {
   computed,
   effect,
   inject,
-  Input,
   input,
   InputSignal,
   OnInit,
-  signal,
-  WritableSignal
 } from '@angular/core';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {Fieldset} from 'primeng/fieldset';
@@ -21,7 +18,6 @@ import {FileUpload} from 'primeng/fileupload';
 import {Checkbox} from 'primeng/checkbox';
 import {LocationService} from '../../../../../shared/components/map/services/location.service';
 import {Category} from '../../../../../shared/models/category';
-import {Select} from 'primeng/select';
 import {MultiSelect} from 'primeng/multiselect';
 
 
@@ -37,7 +33,6 @@ import {MultiSelect} from 'primeng/multiselect';
     Textarea,
     FileUpload,
     Checkbox,
-    Select,
     MultiSelect
   ],
   templateUrl: './metadata-form.component.html',
@@ -117,7 +112,6 @@ export class MetadataFormComponent implements OnInit {
     const formData = new FormData();
     const rawValues = this.metadataForm.getRawValue();
 
-    debugger;
     const { fileCover, filesPreview, chkCoordinate, ...bookData } = rawValues;
 
     // 1. Metadati JSON
@@ -142,15 +136,16 @@ export class MetadataFormComponent implements OnInit {
     if(event.checked) {
       const location = this.userCoordinates();
       if(location) {
+        // Salvo le coordinate applicando la privacy in modo che non siano precise, ma approsimate
         this.metadataForm.patchValue({
-          latitude: this._locationService.applyPrivacyCoordiante(location.coordinates[0],2),
-          longitude: this._locationService.applyPrivacyCoordiante(location.coordinates[1], 2)
+          longitude: this._locationService.applyPrivacyCoordiante(location.coordinates[0], 2),
+          latitude: this._locationService.applyPrivacyCoordiante(location.coordinates[1], 2)
         })
       }
     } else {
       this.metadataForm.patchValue({
-        latitude: null,
-        longitude: null
+        longitude: null,
+        latitude: null
       })
     }
   }

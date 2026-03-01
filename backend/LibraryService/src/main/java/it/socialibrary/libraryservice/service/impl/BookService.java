@@ -112,7 +112,7 @@ public class BookService implements IBookService {
             GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
             // Creo il punto da inviare al DB
-            Point point = geometryFactory.createPoint(new Coordinate(bookDto.getLatitude(), bookDto.getLongitude()));
+            Point point = geometryFactory.createPoint(new Coordinate(bookDto.getLongitude(), bookDto.getLatitude()));
             book.setLocation(point);
         }
 

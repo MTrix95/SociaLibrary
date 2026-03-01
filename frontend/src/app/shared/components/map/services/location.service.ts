@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy, signal} from '@angular/core';
+import {Injectable, OnDestroy, signal, WritableSignal} from '@angular/core';
 import {Location} from '../../../models/location';
 import {Feature, Geolocation} from 'ol';
 import Map from 'ol/Map';
@@ -14,9 +14,9 @@ import {toLonLat} from 'ol/proj';
   providedIn: 'root',
 })
 export class LocationService implements OnDestroy {
-  readonly isLocationEnabled = signal<boolean>(false);
-  readonly userCoordinates = signal<Location | null>(null);
-  readonly zoomRequest = signal<{lat: number, lon: number} | null>(null);
+  readonly isLocationEnabled: WritableSignal<boolean> = signal(false);
+  readonly userCoordinates: WritableSignal<Location | null> = signal(null);
+  readonly zoomRequest: WritableSignal<{ lon: number, lat: number } | null> = signal(null);
 
   private geolocation?: Geolocation;
   private positionLayer?: VectorLayer<VectorSource>;
@@ -24,7 +24,7 @@ export class LocationService implements OnDestroy {
   private positionChangeHandler?: () => void;
   private errorHandler?: () => void;
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.stopTracking();
     this.cleanup();
   }
@@ -32,7 +32,7 @@ export class LocationService implements OnDestroy {
   /**
    * Verifica se l'API di geolocalizzazione è disponibile nel browser.
    */
-  isGeolocationSupported(): boolean {
+  public isGeolocationSupported(): boolean {
     return 'geolocation' in navigator;
   }
 
@@ -40,9 +40,9 @@ export class LocationService implements OnDestroy {
    * Configura e avvia il tracciamento della posizione dell'utente sulla mappa.
    * Se il tracciamento è già attivo, lo riavvia.
    */
-  setupGeolocation(map: Map): void {
+  public setupGeolocation(map: Map): void {
     if (!this.isGeolocationSupported()) {
-      this.updateLocationStatus(false, null);
+      this.updateLocationStatus(false, undefined);
       return;
     }
 
@@ -60,17 +60,18 @@ export class LocationService implements OnDestroy {
   /**
    * Ferma il tracciamento della posizione.
    */
-  stopTracking(): void {
+  public stopTracking(): void {
     if (this.geolocation) {
       this.geolocation.setTracking(false);
     }
   }
 
-  public zoomTo(lat: number, lon: number) {
-    this.zoomRequest.set({ lat, lon });
+  public zoomTo(lon: number, lat: number): void {
+    this.zoomRequest.set({ lon, lat });
   }
 
-  public applyPrivacyCoordiante(coord: number, precision: number = 2) {
+
+  public applyPrivacyCoordiante(coord: number, precision: number = 2): number {
     const factor = Math.pow(10, precision);
     return Math.round(coord * factor) / factor;
   }
@@ -178,7 +179,7 @@ export class LocationService implements OnDestroy {
    * Gestisce gli errori di geolocalizzazione.
    */
   private handleGeolocationError(): void {
-    this.updateLocationStatus(false, null);
+    this.updateLocationStatus(false, undefined);
     if (this.geolocation) {
       this.geolocation.setTracking(false);
     }
@@ -196,10 +197,7 @@ export class LocationService implements OnDestroy {
   /**
    * Aggiorna lo stato della geolocalizzazione e le coordinate dell'utente.
    */
-  private updateLocationStatus(
-    enabled: boolean,
-    coordinates: Location | null
-  ): void {
+  private updateLocationStatus(enabled: boolean, coordinates?: Location): void {
     this.isLocationEnabled.set(enabled);
     if (coordinates) {
       this.userCoordinates.set(coordinates);

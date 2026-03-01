@@ -38,7 +38,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   );
 
   constructor() {
-    // Ascolta il signal e scatta in automatico
+    // Ascolta il signal
     effect(() => {
       const requestToZoom = this.locationService.zoomRequest();
       const isEnabled = this.isLocationAvailable();
