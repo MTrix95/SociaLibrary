@@ -20,10 +20,7 @@ public interface BookRepository extends ListCrudRepository<Book, UUID>, JpaSpeci
                 FROM books b
                 WHERE public.ST_DWithin(
                   b.location::public.geography,
-                  public.ST_Transform(
-                    public.ST_SetSRID(public.ST_MakePoint(:lon, :lat), 3857),
-                              4326
-                  )::public.geography,
+                  public.ST_SetSRID(public.ST_MakePoint(:lon, :lat), 4326)::public.geography,
                   :distance
                 )
            """, nativeQuery = true)
