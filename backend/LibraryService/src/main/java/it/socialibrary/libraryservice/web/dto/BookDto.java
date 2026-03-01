@@ -1,0 +1,57 @@
+package it.socialibrary.libraryservice.web.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.socialibrary.libraryservice.entity.BookImage;
+import it.socialibrary.libraryservice.enums.LoanStatus;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+/**
+ * DTO del libro
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class BookDto implements Serializable {
+
+    private UUID id;
+    @NotNull(message = "Il campo titolo è obbligatorio")
+    @Size(message = "Hai superato il limite per il campo titolo", min = 1, max = 255)
+    private String title;
+    @NotNull(message = "Il campo autore è obbligatorio")
+    @Size(message = "Hai superato il limite per il campo autore", min = 1, max = 255)
+    private String author;
+    @NotNull(message = "Il campo ISBN è obbligatorio")
+    private String isbn;
+    @Size(max = 255)
+    private String description;
+    private LocalDate datePublished;
+    @NotNull(message = "Il campo publisher è obbligatorio")
+    @Size(message = "Hai superato il limite per il campo publisher", min = 1, max = 255)
+    private String publisher;
+    private UUID userId;
+    private Double latitude;
+    private Double longitude;
+
+    @NotNull(message = "Il campo categoria dev'essere obbligatorio")
+    private Set<UUID> categories = new HashSet<>();
+    private OffsetDateTime lastDateStatus;
+    private LoanStatus status;
+
+    private Set<LoanRequestDto> loanRequests = new HashSet<>();
+    private Set<BookImageDto> bookImages = new HashSet<>();
+}

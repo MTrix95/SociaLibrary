@@ -1,8 +1,11 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Book} from '../../../../shared/models/book';
 import {BookFilter} from '../../../../shared/models/book-filter';
+import {Page} from '../../../../shared/models/page';
+import {Category} from '../../../../shared/models/category';
+import {LoanRequest} from '../../../../shared/models/loan-request';
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +13,19 @@ import {BookFilter} from '../../../../shared/models/book-filter';
 export class BookSearchService {
   private httpClient: HttpClient = inject(HttpClient);
 
-  searchBooks(filters: BookFilter): Observable<Book[]> {
-    let params = new HttpParams();
+  findCategories(): Observable<Category[]> {
+    return this.httpClient.get<Category[]>('/api/library/categories/');
+  }
 
-    Object.entries(filters).forEach(([key, value]) => {
-      if(value != null) {
-        if (typeof value === 'object' && key === 'location') {
-          params = params.append('lat', value.latitude).append('lon', value.longitude);
-        } else {
-          params = params.append(key, value.toString());
-        }
-      }
-    });
+  searchBooks(filters: BookFilter | null, page: number, size: number): Observable<Page<Book>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
 
-    return this.httpClient.get<Book[]>(`/api/library/search`, { params });
+    return this.httpClient.post<Page<Book>>('/api/library/books/', filters ?? {}, { params });
+  }
+
+  loanRequest(loanRequest: LoanRequest): Observable<void> {
+    return this.httpClient.post<void>('/api/library/loan', loanRequest);
   }
 }

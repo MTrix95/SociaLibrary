@@ -28,6 +28,8 @@ public class SecurityConfig {
                         // API pubbliche
                         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/library/images/**").permitAll()
+
                         .anyRequest().fullyAuthenticated()
                 )
                 .oauth2ResourceServer(oauth ->

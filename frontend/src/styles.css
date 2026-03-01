@@ -11,6 +11,11 @@ html, body { height: 100%; margin: 0; padding: 0; }
     @apply relative flex flex-col gap-1.5 flex-1;
   }
 
+  .library-input-group .p-select-clear-icon,
+  .library-input-group .p-select-dropdown {
+    @apply h-full flex items-center;
+  }
+
   /* LABEL */
   .library-input-label {
     @apply text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest pointer-events-none;
@@ -21,6 +26,15 @@ html, body { height: 100%; margin: 0; padding: 0; }
     @apply w-full bg-gray-50 border-gray-200 text-gray-700 rounded-xl p-3 shadow-sm transition-all;
   }
 
+  .library-input-field.p-select,
+  .library-input-field.p-multiselect {
+    @apply h-12 flex items-center py-0 px-3;
+  }
+
+  .library-input-field.p-select .p-select-label {
+    @apply flex items-center h-full py-0;
+  }
+
   /* ICONA */
   .library-input-group i {
     @apply absolute left-4 top-11.5 -translate-y-1/2 text-gray-400 z-10 transition-colors;
@@ -29,6 +43,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
   /* Se il gruppo contiene un'icona, aggiungi il padding all'input automaticamente */
   .library-input-group:has(i) .library-input-field {
     @apply pl-11;
+  }
+
+  textarea.library-input-field {
+    @apply resize-none;
   }
 
   /* FOCUS */
@@ -61,5 +79,9 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
   .p-dialog-footer {
     @apply pl-6 pr-6 pb-3.75;
+  }
+
+  .library-button-primary {
+    @apply px-5 py-3 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-black transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2;
   }
 }

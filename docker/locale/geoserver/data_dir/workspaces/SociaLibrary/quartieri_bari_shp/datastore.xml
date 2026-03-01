@@ -1,0 +1,26 @@
+<dataStore>
+  <id>DataStoreInfoImpl-2d587475:19c76ad76ec:-7ff2</id>
+  <name>quartieri_bari_shp</name>
+  <description>Quartieri di Bari</description>
+  <type>Shapefile</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl-2d587475:19c76ad76ec:-7ff6</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="charset">ISO-8859-1</entry>
+    <entry key="filetype">shapefile</entry>
+    <entry key="create spatial index">true</entry>
+    <entry key="memory mapped buffer">false</entry>
+    <entry key="timezone">Etc/UTC</entry>
+    <entry key="enable spatial index">true</entry>
+    <entry key="namespace">socialibrary_workspace</entry>
+    <entry key="cache and reuse memory maps">true</entry>
+    <entry key="skipScan">true</entry>
+    <entry key="url">file:workspaces/SociaLibrary/shapefiles/municipi.shp</entry>
+    <entry key="fstype">shape</entry>
+  </connectionParameters>
+  <__default>false</__default>
+  <dateCreated>2026-02-19 16:21:24.687 UTC</dateCreated>
+  <disableOnConnFailure>false</disableOnConnFailure>
+</dataStore>

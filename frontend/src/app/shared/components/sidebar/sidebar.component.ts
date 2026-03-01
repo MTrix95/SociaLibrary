@@ -1,4 +1,4 @@
-import {Component, inject, WritableSignal} from '@angular/core';
+import {Component, computed, inject, InputSignal, Signal, WritableSignal} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {DrawerModule} from 'primeng/drawer';
 import {MenuItem, MenuItemCommandEvent, PrimeIcons} from 'primeng/api';
@@ -9,7 +9,7 @@ import {UserProfileComponent} from '../user-profile/user-profile.component';
 import {BookManagementComponent} from '../../../features/user/book-management/book-management.component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {BookSearchComponent} from '../../../features/user/book-search/book-search.component';
-import {FooterComponent} from '../dialog/components/footer/footer.component';
+import {DEFAULT_DIALOG_CONFIG} from './sidebar.constants';
 
 @Component({
   selector: 'app-sidebar',
@@ -35,7 +35,7 @@ import {FooterComponent} from '../dialog/components/footer/footer.component';
 
       <!-- Menu -->
       <div class="flex-1 overflow-y-auto py-4 px-3 space-y-4">
-        @for (item of menuItems; track item.label) {
+        @for (item of menuItems(); track item.label) {
           <div class="space-y-1">
             @if (item.visible) {
               <div [routerLink]="item.items ? null : item.routerLink"
@@ -50,37 +50,39 @@ import {FooterComponent} from '../dialog/components/footer/footer.component';
                 <span class="hidden lg:inline">{{ item.label }}</span>
               </div>
 
-              @if (item.items) {
-                <!-- Sottomenu -->
-                <div class="hidden lg:flex ml-4 pl-4 border-l border-gray-700 flex-col cursor-pointer">
-                  @for (subItem of item.items; track subItem.label) {
-                    <div [routerLink]="subItem.routerLink"
-                         [routerLinkActiveOptions]="{exact: true}"
-                         routerLinkActive="bg-white text-black! font-semibold"
-                         (click)="subItem.command ? subItem.command({originalEvent: $event, item: subItem}) : null"
-                         class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
-                      <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
-                      <span class="block p-2 text-sm  transition-all">
-                          {{ subItem.label }}
-                      </span>
-                    </div>
-                  }
-                </div>
+                @if (item.items) {
+                  <!-- Sottomenu -->
+                  <div class="hidden lg:flex ml-4 pl-4 border-l border-gray-700 flex-col cursor-pointer">
+                    @for (subItem of item.items; track subItem.label) {
+                      @if (subItem.visible) {
+                        <div [routerLink]="subItem.routerLink"
+                             [routerLinkActiveOptions]="{exact: true}"
+                             routerLinkActive="bg-white text-black! font-semibold"
+                             (click)="subItem.command ? subItem.command({originalEvent: $event, item: subItem}) : null"
+                             class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
+                          <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
+                          <span class="block p-2 text-sm  transition-all">
+                                {{ subItem.label }}
+                          </span>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
               }
-            }
-          </div>
-        }
+            </div>
+          }
       </div>
 
       <!-- Footer -->
       <footer class="p-4 border-t border-gray-800 bg-gray-900 shrink-0">
-        @if (isLoggedIn && userProfile()) {
+        @if (isLoggedIn()) {
           <div class="mb-4">
             <p class="hidden lg:block text-xs font-bold text-gray-500 uppercase mb-2">Utente</p>
             <button (click)="openInfo()"  class="w-full flex items-center justify-center lg:justify-start gap-3 p-2 rounded-lg text-left cursor-pointer">
               <div class="flex-1 min-w-0 hidden lg:block">
-                <p class="text-sm font-medium text-white truncate">{{ fullName || 'pippo' }}</p>
-                <p class="text-xs text-gray-500 truncate">{{ email || 'pippo' }}</p>
+                <p class="text-sm font-medium text-white truncate">{{ fullName() }}</p>
+                <p class="text-xs text-gray-500 truncate">{{ email() }}</p>
               </div>
               <i class="pi pi-user lg:hidden text-xl text-gray-400"></i>
             </button>
@@ -99,7 +101,7 @@ import {FooterComponent} from '../dialog/components/footer/footer.component';
         }
       </footer>
     </aside>
-    <app-user-profile [(visible)]="isVisible" [user]="userProfile()"></app-user-profile>
+    <app-user-profile [(visible)]="isVisible" [userId]="idUser()"></app-user-profile>
   `,
   styles: ``,
   standalone: true
@@ -109,76 +111,47 @@ export class SidebarComponent {
   private dialogService: DialogService = inject(DialogService);
 
   protected userProfile: WritableSignal<UserProfile | null> = this.authService.userProfile;
-
   protected isVisible = false;
 
+  /**
+   * Nome completo dell'utente con fallback
+   */
+  protected fullName: Signal<string> = computed(() => {
+    return this.userProfile()?.name || '';
+  });
 
-  protected logIn() {
-    this.authService.login();
-  }
+  protected idUser: Signal<string> = computed(() => {
+    return this.userProfile()?.sub || '';
+  })
 
-  protected logOut() {
-    this.authService.logOut();
-  }
+  /**
+   * Email dell'utente con fallback
+   */
+  protected email: Signal<string> = computed(() => {
+    return this.userProfile()?.email || '';
+  });
 
-  protected openInfo() {
-    this.isVisible = true;
-  }
+  protected isAdmin: Signal<boolean> = computed(() => {
+    return this.userProfile()?.roles?.includes('ADMIN') || false;
+  });
 
-  protected openSearch() {
-    this.dialogService.open(BookSearchComponent, {
-      header: 'Ricerca',
-      data: {
-        isSaveEnabled: false,
-      },
-      width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
-      height: '90vh',     // Altezza quasi a tutto schermo
-      contentStyle: { 'padding': '0 24px', 'height': '100%' },
-      position: 'topright', // Verrà posizionato al centro della pagina
-      baseZIndex: 10000,
-      modal: false, // Evito che ci sia l'overlay dietro alla modale
-      maximizable: true,   // Permette all'utente di espandere la
-      resizable: false, // Non permette all'utente di ridimensionare la modale
-      closable: true,
-      templates: {
-        footer: FooterComponent
-      }
-    });
-  }
+  protected isUser: Signal<boolean> = computed(() => {
+    return this.userProfile()?.roles?.includes('USER') || false;
+  });
 
-  protected openManagementBooks() {
-      this.dialogService.open(BookManagementComponent, {
-        header: 'Gestione',
-        data: {
-          isSaveEnabled: false,
-        },
-        width: '80vw',      // Larghezza ampia dato che contiene ricerca e lista
-        height: '90vh',     // Altezza quasi a tutto schermo
-        position: 'topright', // Verrà posizionato al centro della pagina
-        contentStyle: { 'padding': '0 24px', 'height': '100%' },
-        baseZIndex: 10000,
-        modal: false, // Evito che ci sia l'overlay dietro alla modale
-        maximizable: true,   // Permette all'utente di espandere la
-        resizable: false, // Non permette all'utente di ridimensionare la modalr
-        templates: {
-          footer: FooterComponent
-        }
-      });
-  }
+  /**
+   * Stato di autenticazione dell'utente
+   */
+  protected isLoggedIn: Signal<boolean> = computed(() => {
+    return this.authService.isLoggedIn()
+  });
 
-  get fullName(): string {
-    return this.userProfile()?.name as string;
-  }
+  /**
+   * Items del menu sidebar
+   */
+  protected menuItems: Signal<MenuItem[]> = computed(() => {
+    const loggedIn = this.isLoggedIn();
 
-  get email(): string {
-    return this.userProfile()?.email as string;
-  }
-
-  get isLoggedIn(): boolean {
-    return this.authService.isAuthenticated() as boolean;
-  }
-
-  get menuItems(): MenuItem[] {
     return [
       {
         label: 'Home',
@@ -189,16 +162,22 @@ export class SidebarComponent {
       {
         label: 'Biblioteca',
         icon: PrimeIcons.BOOK,
-        visible: this.isLoggedIn,
+        visible: loggedIn,
         items: [
-          { label: 'Ricerca', icon: PrimeIcons.SEARCH,
+          {
+            label: 'Ricerca',
+            icon: PrimeIcons.SEARCH,
+            visible: this.isAdmin() || this.isUser(),
             command: (event: MenuItemCommandEvent) => {
               this.openSearch();
             }
           },
-          { label: 'Gestione', icon: PrimeIcons.FOLDER_PLUS,
+          {
+            label: 'Gestione',
+            icon: PrimeIcons.FOLDER_PLUS,
+            visible: this.isAdmin() || this.isUser(),
             command: (event: MenuItemCommandEvent) => {
-              this.openManagementBooks()
+              this.openManagementBooks();
             }
           }
         ]
@@ -206,11 +185,75 @@ export class SidebarComponent {
       {
         label: 'Dashboard',
         icon: PrimeIcons.CHART_PIE,
-        visible: this.isLoggedIn,
+        visible: loggedIn,
         items: [
-          { label: 'Statistiche', icon: PrimeIcons.CHART_LINE, routerLink: '/user/dashboard' },
+          {
+            label: 'Statistiche amministratore',
+            visible: this.isAdmin(),
+            icon: PrimeIcons.CHART_LINE,
+            routerLink: '/admin/dashboard'
+          },
+          {
+            label: 'Statistiche',
+            icon: PrimeIcons.CHART_LINE,
+            visible: this.isUser(),
+            routerLink: '/user/dashboard'
+          },
         ]
       },
     ];
+  });
+
+  /**
+   * Apre il dialog di login
+   */
+  protected logIn(): void {
+    this.authService.login();
+  }
+
+  /**
+   * Esegue il logout dell'utente
+   */
+  protected logOut(): void {
+    this.authService.logOut();
+  }
+
+  /**
+   * Apre il dialog del profilo utente
+   */
+  protected openInfo(): void {
+    this.isVisible = true;
+  }
+
+  /**
+   * Apre il dialog di ricerca libri
+   */
+  protected openSearch(): void {
+    this.dialogService.open(BookSearchComponent, {
+      ...DEFAULT_DIALOG_CONFIG,
+      header: 'Ricerca',
+      data: {
+        footerConfig: {
+          showCloseButton: true,
+          showSaveButton: false
+        }
+      }
+    });
+  }
+
+  /**
+   * Apre il dialog di gestione libri
+   */
+  protected openManagementBooks(): void {
+    this.dialogService.open(BookManagementComponent, {
+      ...DEFAULT_DIALOG_CONFIG,
+      header: 'Gestione',
+      data: {
+        footerConfig: {
+          showCloseButton: true,
+          showSaveButton: false
+        }
+      }
+    });
   }
 }

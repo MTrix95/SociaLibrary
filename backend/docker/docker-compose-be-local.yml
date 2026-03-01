@@ -63,6 +63,7 @@ services:
       LIBRARY_USER_DB: ${LIBRARY_USER_DB}
       LIBRARY_PASSWORD_DB: ${LIBRARY_PASSWORD_DB}
       SHARED_DATA_LOGS: /temp/logs
+      SHARED_DATA: /temp/files/thumbnails
     ports:
       - "5007:5005"
       - "${LIBRARY_PORT}:8085"

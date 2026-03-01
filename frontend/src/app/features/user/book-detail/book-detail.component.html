@@ -1,0 +1,41 @@
+<p-tabs value="0" class="flex-1 flex flex-col min-h-0 h-full">
+  <p-tablist>
+    <p-tab value="0">Metadata</p-tab>
+    @if (hasImages) {
+      <p-tab value="1">Anteprima</p-tab>
+    }
+  </p-tablist>
+
+  <!-- DETTAGLIO METADATA -->
+  <p-tabpanels class="flex-1 min-h-0">
+    <p-tabpanel value="0" class="h-full">
+      <app-metadata-form [cat]="categories()" [isReadOnly]="readOnly" [bookDetail]="book()"></app-metadata-form>
+    </p-tabpanel>
+
+    <!-- DETTAGLIO ANTEPRIMA -->
+    <p-tabpanel value="1" class="h-full">
+      <div class="w-full flex justify-center py-4">
+        <p-galleria
+          [value]="images()"
+          [numVisible]="5"
+          [showThumbnails]="false"
+          [showIndicators]="true"
+          [showItemNavigators]="true"
+          [circular]="true"
+          [containerStyle]="{'height': '500px', 'width': '100%', 'max-width': '800px'}"
+        >
+          <ng-template #item let-item>
+            <!-- Rimosso flex-center perché l'immagine ora deve riempire tutto -->
+            <div class="h-full w-full">
+              <img
+                [src]="item.urlImage"
+                class="h-full w-full object-cover block"
+                [alt]="item.id"
+              />
+            </div>
+          </ng-template>
+        </p-galleria>
+      </div>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

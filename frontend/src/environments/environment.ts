@@ -9,5 +9,32 @@ export const environment = {
   AUTH_DEBUG_INFORMATION: false,
   SKIP_ISSUER_CHECK: false,
 
-  GATEWAY_API_URL: '/api'
+  GATEWAY_API_URL: '/api',
+  GEOSERVER_API_URL: '/geo',
+
+  /**
+   * ==============================================
+   *                COSTANTI MAPPA
+   * ==============================================
+   */
+  MAP_DEFAULT_CENTER: [16.871871, 41.117143],
+  MAP_DEFAULT_ZOOM: 13,
+
+  MAP_USER_POSITION_STYLE: {
+    radius: 6,
+    fillColor: '#3399CC',
+    strokeColor: '#fff',
+    strokeWidth: 2,
+  },
+
+  MAP_LIBRARY_WMS_URL: '/geo/ows',
+  MAP_LIBRARY_WMS_PARAMS: {
+    SERVICE: 'WMS',
+    VERSION: '1.1.1',
+    REQUEST: 'GetMap',
+    LAYERS: 'SociaLibrary:books',
+    TILED: true,
+    FORMAT: 'image/png',
+    TRANSPARENT: true,
+  }
 };

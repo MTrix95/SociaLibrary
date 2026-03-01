@@ -6,7 +6,7 @@ import {inject, Injectable} from '@angular/core';
  * AuthGuard - Protezione delle rotte basata sull'autenticazione.
  *
  * Garantisce che l'utente sia autenticato prima di accedere a una rotta.
- * Se l'utente non possiede un token valido (verificato tramite AuthService), viene
+ * Se l'utente non possiede un token valido viene
  * attivato automaticamente il flusso di login.
  */
 @Injectable({
@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
   private readonly authService = inject(AuthService);
 
   canActivate(): boolean {
-    if(this.authService.isAuthenticated()) {
+    if(this.authService.isLoggedIn()) {
       return true;
     }
 

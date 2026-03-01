@@ -1,5 +1,10 @@
 <p-table
   [value]="booksList()"
+  [lazy]="true"
+  [first]="first()"
+  (onLazyLoad)="handleLazyLoad($event)"
+  [totalRecords]="totalRecords()"
+  [loading]="loading()"
   [rows]="5"
   [paginator]="true"
   [scrollable]="true"
@@ -9,12 +14,12 @@
   <!-- Template header -->
   <ng-template #header>
     <tr class="bg-gray-50! border-b  border-gray-100">
-      <th class="library-table-header">ISBN</th>
-      <th class="library-table-header">Titolo</th>
-      <th class="library-table-header">Autore</th>
-      <th class="library-table-header">Editore</th>
-      <th class="library-table-header">Data pubblicazione</th>
-      <th class="library-table-header text-center">Azioni</th>
+      <th id="isbn" class="library-table-header">ISBN</th>
+      <th id="titolo" class="library-table-header">Titolo</th>
+      <th id="autore" class="library-table-header">Autore</th>
+      <th id="editore" class="library-table-header">Editore</th>
+      <th id="data_pubblicazione" class="library-table-header">Data pubblicazione</th>
+      <th id="azioni" class="library-table-header text-center">Azioni</th>
     </tr>
   </ng-template>
 
@@ -25,16 +30,17 @@
       <td class="library-table-cell font-medium text-gray-900">{{ book.title }}</td>
       <td class="library-table-cell text-gray-600">{{ book.author }}</td>
       <td class="library-table-cell text-gray-600">{{ book.publisher }}</td>
-      <td class="library-table-cell text-gray-600 w-45">{{ book.publishedDate | date:'dd/MM/yyyy' }}</td>
+      <td class="library-table-cell text-gray-600 w-45">{{ book.datePublished | date:'dd/MM/yyyy' }}</td>
       <td class="library-table-cell text-center">
-        <button (click)="onOpenDetail(book)" pTooltip="Apri dettaglio"
+        <button (click)="onOpenDetail(book.id)" pTooltip="Apri dettaglio"
                 tooltipPosition="top"
                 class="p-2 text-gray-400 hover:text-gray-900 cursor-pointer">
           <i class="pi pi-ellipsis-v"></i>
         </button>
         <button pTooltip="Visualizza in mappa"
                 tooltipPosition="top"
-                [disabled]="!book.location"
+                [disabled]="!book.longitude || !book.latitude"
+                (click)="zoomTo(book.longitude, book.latitude)"
                 class="p-2 text-gray-400 cursor-pointer disabled:opacity-40 disabled:cursor-default not-disabled:hover:text-gray-900">
           <i class="pi pi-map-marker"></i>
         </button>
