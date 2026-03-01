@@ -68,12 +68,7 @@
       "id" : "664faf26-481b-455f-9051-d80a23a956c8",
       "name" : "User",
       "description" : "Ruolo utente per il progetto Social Library",
-      "composite" : true,
-      "composites" : {
-        "client" : {
-          "library-client" : [ "book:read", "book:manage" ]
-        }
-      },
+      "composite" : false,
       "clientRole" : false,
       "containerId" : "31864dc8-e840-460e-962b-7f33a5c969aa",
       "attributes" : { }
@@ -83,10 +78,7 @@
       "description" : "${role_default-roles}",
       "composite" : true,
       "composites" : {
-        "realm" : [ "offline_access", "uma_authorization" ],
-        "client" : {
-          "account" : [ "manage-account", "view-profile" ]
-        }
+        "realm" : [ "User" ]
       },
       "clientRole" : false,
       "containerId" : "31864dc8-e840-460e-962b-7f33a5c969aa",
@@ -95,13 +87,7 @@
       "id" : "93812229-a5c7-4f38-a692-0695e1778df9",
       "name" : "Admin",
       "description" : "Ruolo amministrativo per il progetto Social Library",
-      "composite" : true,
-      "composites" : {
-        "client" : {
-          "library-client" : [ "book:read", "book:manage" ],
-          "administrator-client" : [ "user:manage", "user:read" ]
-        }
-      },
+      "composite" : false,
       "clientRole" : false,
       "containerId" : "31864dc8-e840-460e-962b-7f33a5c969aa",
       "attributes" : { }
@@ -275,40 +261,6 @@
         "containerId" : "78653e93-0edd-4c08-9d9c-99af4f5cd5c9",
         "attributes" : { }
       } ],
-      "library-client" : [ {
-        "id" : "7599f067-15ef-4da0-972e-f04b3ceb8d41",
-        "name" : "book:read",
-        "description" : "Ruolo che permette la visualizzazione dei libri",
-        "composite" : false,
-        "clientRole" : true,
-        "containerId" : "476635b9-db36-419a-a726-da3ef28fd2cb",
-        "attributes" : { }
-      }, {
-        "id" : "4a521dc9-45cc-493f-8842-6577d044cdd3",
-        "name" : "book:manage",
-        "description" : "Ruolo per modificare i libri della propria libreria",
-        "composite" : false,
-        "clientRole" : true,
-        "containerId" : "476635b9-db36-419a-a726-da3ef28fd2cb",
-        "attributes" : { }
-      } ],
-      "administrator-client" : [ {
-        "id" : "6a9f9e3d-e513-4908-ba87-27d8a7385a6d",
-        "name" : "user:manage",
-        "description" : "Ruolo amministrativo per modificare gli utenti",
-        "composite" : false,
-        "clientRole" : true,
-        "containerId" : "329325c6-a07d-483e-af04-57a1269a12b8",
-        "attributes" : { }
-      }, {
-        "id" : "87466fdf-697e-43a3-970b-1401d85447c1",
-        "name" : "user:read",
-        "description" : "Ruolo amministrativo per la lettura degli utenti",
-        "composite" : false,
-        "clientRole" : true,
-        "containerId" : "329325c6-a07d-483e-af04-57a1269a12b8",
-        "attributes" : { }
-      } ],
       "security-admin-console" : [ ],
       "admin-cli" : [ ],
       "account-console" : [ ],
@@ -396,7 +348,23 @@
         "containerId" : "7cd68a55-425d-4671-b33c-22854383fd47",
         "attributes" : { }
       } ],
-      "social-library-client" : [ ]
+      "social-library-client" : [ {
+        "id" : "add0d4fe-0254-4c17-9c94-79f50f9e1800",
+        "name" : "ADMIN",
+        "description" : "Ruolo amministrativo",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "322b2062-849d-4878-af75-d2336782a3e5",
+        "attributes" : { }
+      }, {
+        "id" : "114c2c3b-cdbe-40cb-b1ba-24fc06569fde",
+        "name" : "USER",
+        "description" : "Ruolo utente",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "322b2062-849d-4878-af75-d2336782a3e5",
+        "attributes" : { }
+      } ]
     }
   },
   "groups" : [ ],
@@ -441,6 +409,31 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "cf66f2a2-9908-4ee9-9271-2a832d1abb5b",
+    "username" : "admin",
+    "firstName" : "Admin",
+    "lastName" : "1",
+    "email" : "luca.tricarico@outlook.com",
+    "emailVerified" : false,
+    "attributes" : {
+      "locale" : [ "it" ]
+    },
+    "enabled" : true,
+    "createdTimestamp" : 1771780360264,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "b293961c-517c-4df5-8bc6-e8b58ef65ec0",
+      "type" : "password",
+      "createdDate" : 1771780360304,
+      "secretData" : "{\"value\":\"313ibuQmpxBp9RZX7m0hX8G+OKQBLgInzO9Q7y57NRg=\",\"salt\":\"t06C907zXzE1hgThzVnU2g==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-socialibrary" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "188ce518-fce9-40be-bab4-c340279f7b80",
     "username" : "admin@admin.it",
     "firstName" : "Admin",
@@ -463,11 +456,34 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-socialibrary" ],
     "clientRoles" : {
-      "library-client" : [ "book:read", "book:manage" ],
-      "administrator-client" : [ "user:manage", "user:read" ]
+      "social-library-client" : [ "ADMIN" ]
     },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "84d7353f-ff16-47d1-b371-29b5033db2ae",
+    "username" : "user1",
+    "firstName" : "Luca",
+    "lastName" : "Tricarico",
+    "email" : "luc.tricarico@gmail.com",
+    "emailVerified" : false,
+    "attributes" : {
+      "locale" : [ "it" ]
+    },
+    "enabled" : true,
+    "createdTimestamp" : 1771757121162,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "2aa85731-564f-43d2-b5e0-03dcda82ec81",
+      "type" : "password",
+      "createdDate" : 1771757121209,
+      "secretData" : "{\"value\":\"rvLjo1sUPORGqRRX4pc0SAdOGddghpET9f0HGakJBw8=\",\"salt\":\"b2FiE2/HO+K+32EVuTumWA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-socialibrary" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
@@ -492,10 +508,9 @@
       "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ "UPDATE_PASSWORD" ],
-    "realmRoles" : [ "default-roles-socialibrary" ],
+    "requiredActions" : [ ],
     "clientRoles" : {
-      "library-client" : [ "book:read", "book:manage" ]
+      "social-library-client" : [ "USER" ]
     },
     "notBefore" : 0,
     "groups" : [ ]
@@ -612,48 +627,6 @@
     "defaultClientScopes" : [ "web-origins", "acr", "roles", "profile", "basic", "email" ],
     "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ]
   }, {
-    "id" : "329325c6-a07d-483e-af04-57a1269a12b8",
-    "clientId" : "administrator-client",
-    "name" : "Administrator Client",
-    "description" : "Administrator Client per il progetto Social Library",
-    "rootUrl" : "",
-    "adminUrl" : "",
-    "baseUrl" : "",
-    "surrogateAuthRequired" : false,
-    "enabled" : true,
-    "alwaysDisplayInConsole" : false,
-    "clientAuthenticatorType" : "client-secret",
-    "secret" : "**********",
-    "redirectUris" : [ "/*" ],
-    "webOrigins" : [ "/*" ],
-    "notBefore" : 0,
-    "bearerOnly" : false,
-    "consentRequired" : false,
-    "standardFlowEnabled" : false,
-    "implicitFlowEnabled" : false,
-    "directAccessGrantsEnabled" : false,
-    "serviceAccountsEnabled" : false,
-    "publicClient" : false,
-    "frontchannelLogout" : true,
-    "protocol" : "openid-connect",
-    "attributes" : {
-      "realm_client" : "false",
-      "oidc.ciba.grant.enabled" : "false",
-      "client.secret.creation.time" : "1770475708",
-      "backchannel.logout.session.required" : "true",
-      "oauth2.jwt.authorization.grant.enabled" : "false",
-      "standard.token.exchange.enabled" : "false",
-      "post.logout.redirect.uris" : "+",
-      "oauth2.device.authorization.grant.enabled" : "false",
-      "backchannel.logout.revoke.offline.tokens" : "false",
-      "dpop.bound.access.tokens" : "false"
-    },
-    "authenticationFlowBindingOverrides" : { },
-    "fullScopeAllowed" : true,
-    "nodeReRegistrationTimeout" : -1,
-    "defaultClientScopes" : [ "acr", "roles", "profile", "basic", "email" ],
-    "optionalClientScopes" : [ "organization" ]
-  }, {
     "id" : "82d0281d-05c4-4b63-9189-7ca358fdba62",
     "clientId" : "broker",
     "name" : "${client_broker}",
@@ -682,47 +655,6 @@
     "nodeReRegistrationTimeout" : 0,
     "defaultClientScopes" : [ "web-origins", "acr", "roles", "profile", "basic", "email" ],
     "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ]
-  }, {
-    "id" : "476635b9-db36-419a-a726-da3ef28fd2cb",
-    "clientId" : "library-client",
-    "name" : "Library Client",
-    "description" : "Client per la libreria del progetto Social Library",
-    "rootUrl" : "http://localhost:8083/api/library",
-    "adminUrl" : "http://localhost:8083/api/library",
-    "baseUrl" : "",
-    "surrogateAuthRequired" : false,
-    "enabled" : true,
-    "alwaysDisplayInConsole" : false,
-    "clientAuthenticatorType" : "client-secret",
-    "secret" : "**********",
-    "redirectUris" : [ "http://localhost:8083/api/library/*" ],
-    "webOrigins" : [ "http://localhost:8083" ],
-    "notBefore" : 0,
-    "bearerOnly" : false,
-    "consentRequired" : false,
-    "standardFlowEnabled" : false,
-    "implicitFlowEnabled" : false,
-    "directAccessGrantsEnabled" : false,
-    "serviceAccountsEnabled" : false,
-    "publicClient" : false,
-    "frontchannelLogout" : true,
-    "protocol" : "openid-connect",
-    "attributes" : {
-      "realm_client" : "false",
-      "oidc.ciba.grant.enabled" : "false",
-      "client.secret.creation.time" : "1770476594",
-      "backchannel.logout.session.required" : "true",
-      "standard.token.exchange.enabled" : "false",
-      "post.logout.redirect.uris" : "+",
-      "oauth2.device.authorization.grant.enabled" : "false",
-      "backchannel.logout.revoke.offline.tokens" : "false",
-      "dpop.bound.access.tokens" : "false"
-    },
-    "authenticationFlowBindingOverrides" : { },
-    "fullScopeAllowed" : true,
-    "nodeReRegistrationTimeout" : -1,
-    "defaultClientScopes" : [ "acr", "roles", "profile", "basic" ],
-    "optionalClientScopes" : [ "organization", "email" ]
   }, {
     "id" : "78653e93-0edd-4c08-9d9c-99af4f5cd5c9",
     "clientId" : "realm-management",
@@ -921,8 +853,8 @@
         "multivalued" : "true",
         "userinfo.token.claim" : "false",
         "user.attribute" : "foo",
-        "id.token.claim" : "false",
         "lightweight.claim" : "false",
+        "id.token.claim" : "true",
         "access.token.claim" : "true",
         "claim.name" : "roles",
         "jsonType.label" : "String"
