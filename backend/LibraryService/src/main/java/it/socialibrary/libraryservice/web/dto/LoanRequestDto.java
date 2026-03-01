@@ -20,6 +20,8 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanRequestDto implements Serializable {
     private UUID id;
+    private UUID bookID;
     private LoanStatus status;
+    private String message;
     private OffsetDateTime requestDate;
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ILoanService {
+    void saveLoanRequest(LoanRequestDto request, UUID userID);
     Page<LoanRequestDto> findByBook_UserIdAndStatus(UUID userID, LoanStatus status, Pageable pageable);
     Optional<LoanRequestDto> findByBook_IdAndStatus(UUID bookID, LoanStatus status);
 }

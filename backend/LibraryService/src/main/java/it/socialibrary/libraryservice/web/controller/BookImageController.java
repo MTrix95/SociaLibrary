@@ -21,7 +21,7 @@ public class BookImageController {
 
     private static final String PATH_FILE_IMAGES = System.getenv("SHARED_DATA");
 
-    @GetMapping("/{idBook}/{folder}/{filename:.+}")
+    @GetMapping(value = "/{idBook}/{folder}/{filename:.+}")
     public ResponseEntity<Resource> getImage(
             @PathVariable("idBook") UUID idBook,
             @PathVariable("folder") String folder,

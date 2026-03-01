@@ -1,0 +1,8 @@
+<div class="grid grid-cols-1 gap-6 pt-2 bg-white">
+  <form [formGroup]="contactForm">
+    <div class="library-input-group">
+      <label class="library-input-label">Messaggio</label>
+      <textarea class="library-input-field" rows="10" cols="30" pTextarea formControlName="message" [autoResize]="false" fluid></textarea>
+    </div>
+  </form>
+</div>

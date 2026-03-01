@@ -8,6 +8,8 @@ import it.socialibrary.libraryservice.exceptions.NotFoundException;
 import it.socialibrary.libraryservice.mappers.IBookMapper;
 import it.socialibrary.libraryservice.mappers.ICategoryMapper;
 import it.socialibrary.libraryservice.repository.BookRepository;
+import it.socialibrary.libraryservice.repository.CategoryRepository;
+import it.socialibrary.libraryservice.repository.LoanRequestRepository;
 import it.socialibrary.libraryservice.repository.specifications.BookSpecification;
 import it.socialibrary.libraryservice.service.IBookImageService;
 import it.socialibrary.libraryservice.service.IBookService;
@@ -38,21 +40,19 @@ import java.util.stream.Collectors;
 public class BookService implements IBookService {
 
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
+    private final LoanRequestRepository loanRepository;
 
-    private final ICategoryService categoryService;
     private final IBookImageService bookImageService;
-    private final ILoanService loanService;
     private final IBookMapper bookMapper;
-    private final ICategoryMapper categoryMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, ICategoryService categoryService, IBookImageService bookImageService, ILoanService loanService, IBookMapper bookMapper, ICategoryMapper categoryMapper) {
+    public BookService(BookRepository bookRepository, CategoryRepository categoryRepository, IBookImageService bookImageService, LoanRequestRepository loanRepository, IBookMapper bookMapper) {
         this.bookRepository = bookRepository;
-        this.categoryService = categoryService;
+        this.categoryRepository = categoryRepository;
         this.bookImageService = bookImageService;
-        this.loanService = loanService;
+        this.loanRepository = loanRepository;
         this.bookMapper = bookMapper;
-        this.categoryMapper = categoryMapper;
     }
 
     /**
@@ -107,7 +107,7 @@ public class BookService implements IBookService {
     public void save(BookDto bookDto, MultipartFile cover, List<MultipartFile> previews) throws IOException {
         Book book = this.bookMapper.toEntity(bookDto);
 
-        // 1: Salvo le coordinate
+        // 1: Creo le coordinate
         if(bookDto.getLatitude() != null && bookDto.getLongitude() != null) {
             GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
@@ -120,7 +120,7 @@ public class BookService implements IBookService {
         if(bookDto.getCategories() != null && !bookDto.getCategories().isEmpty()) {
             Set<Category> categories = bookDto.getCategories().stream()
                     .map(id ->
-                            categoryMapper.toEntity(categoryService.findById(id).orElseThrow())
+                            categoryRepository.findById(id).orElseThrow()
                     )
                     .collect(Collectors.toSet());
 
@@ -142,8 +142,8 @@ public class BookService implements IBookService {
     public void delete(UUID id) throws NotFoundException {
         if(!this.bookRepository.existsById(id)) throw new NotFoundException("Record not found");
 
-        if (this.loanService.findByBook_IdAndStatus(id, LoanStatus.PENDING).isPresent()
-                || this.loanService.findByBook_IdAndStatus(id, LoanStatus.ACCEPTED).isPresent()) {
+        if (this.loanRepository.findByBook_IdAndStatus(id, LoanStatus.PENDING).isPresent()
+                || this.loanRepository.findByBook_IdAndStatus(id, LoanStatus.ACCEPTED).isPresent()) {
             throw new LibraryException("Impossibile eliminare il libro: esistono richieste di prestito in corso (PENDING o ACCEPTED).");
         }
 

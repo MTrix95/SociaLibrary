@@ -3,10 +3,13 @@ import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 import {Tooltip} from 'primeng/tooltip';
 import {Book} from '../../../../../shared/models/book';
 import {DatePipe} from '@angular/common';
-import {DialogService} from 'primeng/dynamicdialog';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {BookDetailComponent} from '../../../book-detail/book-detail.component';
 import {FooterComponent} from '../../../../../shared/components/dialog/components/footer/footer.component';
 import {LocationService} from '../../../../../shared/components/map/services/location.service';
+import {ContactForm} from '../../../../../shared/components/contact-form/contact-form';
+import {BookSearchService} from '../../services/book-search.service';
+import {LoanRequest} from '../../../../../shared/models/loan-request';
 
 @Component({
   selector: 'app-book-list',
@@ -22,6 +25,9 @@ import {LocationService} from '../../../../../shared/components/map/services/loc
 export class BookListComponent {
   private dialogService: DialogService = inject(DialogService);
   private locationService: LocationService = inject(LocationService);
+  private bookSearchService: BookSearchService = inject(BookSearchService);
+
+  private contactDialog?: DynamicDialogRef<ContactForm> | null;
 
   totalRecords = input.required<number>();
   loading = input<boolean>(false);
@@ -55,7 +61,7 @@ export class BookListComponent {
               label: 'Conferma',
               icon: 'pi pi-check',
               action: () => {
-                console.log('Conferma...');
+                this.createDialogContact(bookID);
               },
               closeOnClick: true // Chiude la dialog dopo l'azione
             }
@@ -80,5 +86,39 @@ export class BookListComponent {
         footer: FooterComponent
       }
     });
+  }
+
+  private createDialogContact(bookID: string) {
+    this.contactDialog = this.dialogService.open(ContactForm, {
+      header: 'Prestito',
+      data: {
+        bookID,
+        footerConfig: {
+          showSaveButton: false,
+          showCloseButton: true,
+          buttons: [
+            {
+              label: 'Conferma',
+              icon: 'pi pi-check',
+              action: () => {
+                const loanRequest: LoanRequest = {
+                  bookID: bookID,
+                  message: 'Ciao! Potrei avere in prestito questo libro?'
+                }
+
+                this.bookSearchService.loanRequest(loanRequest)
+              },
+              closeOnClick: true // Chiude la dialog dopo l'azione
+            }
+          ]
+        }
+      },
+      maximizable: true,   // Permette all'utente di espandere la
+      resizable: false, // Non permette all'utente di ridimensionare la modale
+      closable: true,
+      templates: {
+        footer: FooterComponent
+      }
+    })
   }
 }
