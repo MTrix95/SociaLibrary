@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import {MapComponent} from './shared/components/map/map.component';
 import {AuthGuard} from './core/guards/auth-guard';
-import {StatsComponent} from './features/user/settings/stats/stats.component';
+import {StatsComponent} from './features/admin/settings/stats/stats.component';
 import {RoleGuard} from './core/guards/role-guard';
+import {StatsUserComponent} from './features/user/settings/stats/stats-user.component';
 
 export const routes: Routes = [
   { path: 'home', component: MapComponent},
@@ -11,7 +12,7 @@ export const routes: Routes = [
     path: 'user',
     canActivate: [AuthGuard],
     children: [
-      { path: 'dashboard', component: StatsComponent },
+      { path: 'dashboard', component: StatsUserComponent },
     ]
   },
   // ROTTE AMMINISTRATORE

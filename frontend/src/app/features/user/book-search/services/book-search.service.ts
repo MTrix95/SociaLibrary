@@ -26,6 +26,6 @@ export class BookSearchService {
   }
 
   loanRequest(loanRequest: LoanRequest): Observable<void> {
-    return this.httpClient.post<void>('/api/library/loan', loanRequest);
+    return this.httpClient.post<void>('/api/library/loans/', loanRequest);
   }
 }

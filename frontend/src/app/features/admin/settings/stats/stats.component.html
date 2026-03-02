@@ -1,0 +1,30 @@
+<div class="p-6 bg-slate-50 min-h-screen">
+  <!-- Header Semplice -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-slate-800">Dashboard Analitica</h1>
+    <p class="text-slate-500">Monitoraggio attività giornaliera e totale</p>
+  </div>
+
+  <!-- Griglia Grafici -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Card Grafico a Barre -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-semibold text-slate-700">Attività Giornaliera</h2>
+        <span class="text-xs font-medium px-2 py-1 bg-blue-50 text-blue-600 rounded">Live</span>
+      </div>
+      <p-chart type="bar" [data]="dataDaily" [options]="optionsDaily" style="height: 350px;" />
+    </div>
+
+    <!-- Card Grafico a Linee -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-semibold text-slate-700">Andamento Totale</h2>
+        <span class="text-xs font-medium px-2 py-1 bg-green-50 text-green-600 rounded">Aggiornato</span>
+      </div>
+      <p-chart type="line" [data]="dataTotal" [options]="optionsTotal" style="height: 350px;" />
+    </div>
+
+  </div>
+</div>

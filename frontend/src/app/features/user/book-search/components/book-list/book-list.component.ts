@@ -101,12 +101,16 @@ export class BookListComponent {
               label: 'Conferma',
               icon: 'pi pi-check',
               action: () => {
+                debugger;
                 const loanRequest: LoanRequest = {
                   bookID: bookID,
                   message: 'Ciao! Potrei avere in prestito questo libro?'
                 }
 
-                this.bookSearchService.loanRequest(loanRequest)
+                this.bookSearchService.loanRequest(loanRequest).subscribe({
+                  next: () => { console.log("") },
+                  error: () => console.log("Errore"),
+                })
               },
               closeOnClick: true // Chiude la dialog dopo l'azione
             }

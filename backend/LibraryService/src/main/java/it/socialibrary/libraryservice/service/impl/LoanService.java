@@ -33,7 +33,7 @@ public class LoanService implements ILoanService {
 
     @Override
     public void saveLoanRequest(LoanRequestDto request, UUID userID) {
-        BookDto book = this.bookService.findById(request.getId());
+        BookDto book = this.bookService.findById(request.getBookID());
         if(book.getUserId().equals(userID)) throw new LibraryException("Il libro appartiene alla tua libreria personale");
 
         LoanRequest entity = loanRequestMapper.toEntity(request);

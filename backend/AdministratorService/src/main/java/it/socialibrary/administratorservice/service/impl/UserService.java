@@ -6,6 +6,8 @@ import it.socialibrary.administratorservice.exceptions.NotFoundException;
 import it.socialibrary.administratorservice.repository.UserRepository;
 import it.socialibrary.administratorservice.service.IUserService;
 import it.socialibrary.administratorservice.utils.JWTUtils;
+import it.socialibrary.administratorservice.web.dto.UserDto;
+import it.socialibrary.administratorservice.web.dto.UserStatsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -72,5 +75,15 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public User findById(UUID idUser) throws NotFoundException {
         return userRepository.findById(idUser).orElseThrow(() -> new NotFoundException("Record not found"));
+    }
+
+    /**
+     * Ritorna le statistiche degli utenti
+     * @return List una lista di statische di utenti
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserStatsDto> findUserStats() {
+        return userRepository.getUserRegistrationStats();
     }
 }
