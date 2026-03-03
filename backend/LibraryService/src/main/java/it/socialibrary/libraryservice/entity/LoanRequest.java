@@ -25,13 +25,11 @@ public class LoanRequest {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @NotNull
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
@@ -44,11 +42,9 @@ public class LoanRequest {
     )
     private LoanStatus status;
 
-    @NotNull
-    @Column(name = "request_date", nullable = false, insertable = false, updatable = false)
+    @Column(name = "request_date", insertable = false, updatable = false)
     private OffsetDateTime requestDate;
 
-    @NotNull
     @Column(name = "status_date", nullable = false)
     private OffsetDateTime statusDate;
 
