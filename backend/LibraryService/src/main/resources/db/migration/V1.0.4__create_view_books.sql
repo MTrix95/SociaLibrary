@@ -2,7 +2,7 @@ create or replace view books_map_v(book_id, title, author, location, thumbnail_u
 SELECT b.id         AS book_id,
        b.title,
        b.author,
-       b.location::geometry(Point, 4326) AS location,
+       b.location::public.geometry(Point, 4326) AS location,
        im.url_image AS thumbnail_url
 FROM books b
          LEFT JOIN books_images im ON b.id = im.book_id
